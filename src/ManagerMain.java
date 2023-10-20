@@ -8,6 +8,7 @@ import java.util.Scanner;
 public class ManagerMain {
     final private User user;
     private Scanner scanner;
+    private String filepath="src/productlist.txt";
 
 
     //생성자
@@ -50,7 +51,7 @@ public class ManagerMain {
         System.out.println("[재고확인]");
 
         //productlist.txt파일읽기
-        Scanner filescan = new Scanner(new File("src/productlist.txt"));
+        Scanner filescan = new Scanner(new File(filepath));
 
         while(filescan.hasNextLine()){
             String[] arr=filescan.nextLine().split("/");
@@ -113,7 +114,7 @@ public class ManagerMain {
         //제품 데이터를 읽고 수정
         List<String> lines = new ArrayList<>();
         boolean find=false; //pNum과 일치하는 상품번호가 있는지 확인할 변수
-        try(BufferedReader reader= new BufferedReader(new FileReader("src/productlist.txt"))){
+        try(BufferedReader reader= new BufferedReader(new FileReader(filepath))){
             String line;
             while((line=reader.readLine())!=null){
                 String[] arr=line.split("/");
@@ -139,7 +140,7 @@ public class ManagerMain {
             System.out.println("입력하신 상품번호에 해당하는 상품이 없습니다.");
         }else{
             //파일에 수정된 데이터 저장
-            try(BufferedWriter writer=new BufferedWriter(new FileWriter("src/productlist.txt"))){
+            try(BufferedWriter writer=new BufferedWriter(new FileWriter(filepath))){
                 for(String line: lines){
                     writer.write(line);
                     writer.newLine();
@@ -159,6 +160,7 @@ public class ManagerMain {
         System.out.print("AShoppingMall > ");
         scanner.nextLine(); //이전 개행 버림
         scanner.nextLine(); //엔터키 입력 대기
+
         System.out.println();
     }
 
