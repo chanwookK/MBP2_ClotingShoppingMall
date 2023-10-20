@@ -8,7 +8,7 @@ import java.util.Scanner;
 public class ManagerMain {
     final private User user;
     private Scanner scanner;
-    private String filepath="src/productlist.txt";
+    final private String filepath="src/productlist.txt";
 
 
     //생성자
