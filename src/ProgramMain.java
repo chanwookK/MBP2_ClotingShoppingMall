@@ -40,6 +40,7 @@ public class ProgramMain {
 
             }
         }
+        scan.close();
 
     }
 
