@@ -11,14 +11,14 @@ public class ManagerMain {
 
 
     //생성자
-    public ManagerMain(User user) throws FileNotFoundException {
+    public ManagerMain(User user){
         this.user=user;
         managerMainLoop();
     }
 
 
     //관리자 메뉴
-    public void managerMainLoop() throws FileNotFoundException {
+    public void managerMainLoop(){
         int selNum;
         Scanner scanner = new Scanner(System.in);
         while(true){
@@ -44,29 +44,32 @@ public class ManagerMain {
     }
 
     //전체 상품 데이터 체크하는 함수
-    public void checkProduct() throws FileNotFoundException {
+    public void checkProduct(){
         System.out.println();
-        System.out.println("전체 재고를 보여드리겠습니다.\n");
         System.out.println("[재고확인]");
 
         //productlist.txt파일읽기
-        Scanner filescan = new Scanner(new File(filepath));
+        try(Scanner filescan = new Scanner(new File(filepath))){
 
-        while(filescan.hasNextLine()){
-            String[] arr=filescan.nextLine().split("/");
+            while(filescan.hasNextLine()){
+                String[] arr=filescan.nextLine().split("/");
 
-            //35000 -> 35,000
-            DecimalFormat decimalFormat= new DecimalFormat("#,###");
-            String formattedNumber=decimalFormat.format(Integer.parseInt(arr[2]));
+                //35000 -> 35,000
+                DecimalFormat decimalFormat= new DecimalFormat("#,###");
+                String formattedNumber=decimalFormat.format(Integer.parseInt(arr[2]));
 
-            System.out.printf("%s. %s\n",arr[0],arr[1]);
-            System.out.printf("\t가격: %s\n",formattedNumber);
-            System.out.printf("\t잔여수량: %s\n",arr[3]);
+                System.out.printf("%s. %s\n",arr[0],arr[1]);
+                System.out.printf("\t가격: %s\n",formattedNumber);
+                System.out.printf("\t잔여수량: %s\n",arr[3]);
 
+            }
+            filescan.close();
+
+        }catch(FileNotFoundException e){
+            e.printStackTrace();
         }
-        filescan.close();
-        //productlist.txt파일읽기 완료
 
+        //productlist.txt파일읽기 완료
         System.out.println("\n수량변경을원하시면 'y'를, 관리자 메뉴 첫 화면으로 돌아가길 원하시면 'n'을 입력해주세요.");
 
         scanner = new Scanner(System.in);
