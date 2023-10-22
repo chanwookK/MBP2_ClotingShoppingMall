@@ -1,4 +1,6 @@
-홍길동 gildong1234
-name1 price1 count1
-name2 price2 count2
-name3 price3 count3
+김건국
+kkk1234
+5000/2
+170000/70000
+46/쫀쫀한바지/35000/230927
+50/쫀쫀한셔츠/42000/231001
