@@ -77,6 +77,7 @@ public class ManagerMain {
         while(true){
             System.out.print("AShoppingMall > ");
             select=scanner.nextLine();
+            select=select.trim();
             if(!select.equals("y") && !select.equals("n")){
                 System.out.println("!오류: 잘못된 입력입니다. 다시 입력해주세요.");
             }else break;
