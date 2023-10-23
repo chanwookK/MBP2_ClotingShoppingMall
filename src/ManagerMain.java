@@ -104,6 +104,20 @@ public class ManagerMain {
 
         scanner = new Scanner(System.in);
 
+        //제품 데이터 읽기
+        List<String> lines = new ArrayList<>();
+        //boolean find=false; //pNum과 일치하는 상품번호가 있는지 확인할 변수
+        try(BufferedReader reader= new BufferedReader(new FileReader(filepath))){
+            String line;
+            while((line=reader.readLine())!=null){
+                lines.add(line);
+            }
+        }catch(IOException e){
+            System.out.println("예외 발생: "+e.getMessage()+"\n");
+        }
+
+
+
         //상품번호 예외처리
         while(true){
             try{
@@ -115,7 +129,10 @@ public class ManagerMain {
                 //입력이 숫자로만 구성되고 길이가 1 이상인지 확인
                 if(num_input.matches("[0-9]+") && num_input.length()>=1){
                     pNum=Integer.parseInt(num_input);
-                    break;
+                    if(pNum>0 && pNum<=lines.size()) break;
+                    else{
+                        System.out.println("!오류: 입력하신 상품번호에 해당하는 상품이 없습니다.\n");
+                    }
                 }else{
                     System.out.println("!오류: 문법 규칙에 맞는 입력이 아닙니다.\n");
                 }
@@ -124,7 +141,8 @@ public class ManagerMain {
             }
         }
 
-        //변경수량 예외처리 대비
+
+        //변경수량 예외처리
         while(true){
             try{
                 System.out.println("변경하실 수량을 입력해주세요");
@@ -136,6 +154,7 @@ public class ManagerMain {
                 if(check_amount.length()!=amount_input.length()){
                     System.out.println("!오류: 문법 규칙에 맞는 입력이 아닙니다.\n");
                 }else if(!amount_input.matches("^[0-9]+$")){
+                    //숫자로만 이루어져있어야하며 중간에 공백이 있으면 안된다.
                     System.out.println("!오류: 문법 규칙에 맞는 입력이 아닙니다.\n");
                 }else{
                     pAmount=Integer.parseInt(amount_input);
@@ -151,49 +170,29 @@ public class ManagerMain {
         }
 
 
-        //제품 데이터 읽기
-        List<String> lines = new ArrayList<>();
-        boolean find=false; //pNum과 일치하는 상품번호가 있는지 확인할 변수
-        try(BufferedReader reader= new BufferedReader(new FileReader(filepath))){
-            String line;
-            while((line=reader.readLine())!=null){
-                String[] arr=line.split("/");
+        //데이터 수정
+        //pNum(사용자 입력받은 상품번호)는 1부터 시작하기 때문에 배열 접근시 -1해줌.
+        String[] arr=lines.get(pNum-1).split("/");
+        arr[3]=String.valueOf(pAmount);
+        pName=arr[1];
+        String modify=String.join("/",arr);
+        lines.set(pNum-1,modify);
 
-                //상품번호 같은지 확인
-                if(pNum==Integer.parseInt(arr[0])){
-                    //상품번호가 위에서 입력한 pNum과 일치하면 수량변경
-                    find=true;
-                    //arr[3]=String.valueOf(pAmount);
-                    pName=arr[1];
 
-                    line=String.join("/",arr);
-                }
-
-                lines.add(line);
+        //파일에 수정된 데이터 저장
+        try(BufferedWriter writer=new BufferedWriter(new FileWriter(filepath))){
+            for(String line: lines){
+                writer.write(line);
+                writer.newLine();
             }
         }catch(IOException e){
             System.out.println("예외 발생: "+e.getMessage()+"\n");
         }
 
+        //수정완료
+        System.out.println();
+        System.out.printf("%d. %s 잔여수량이 %d으로 변경되었습니다.\n",pNum,pName,pAmount);
 
-        if(!find){//pNum이 존재하지 않는 상품번호일때
-            System.out.println();
-            System.out.println("입력하신 상품번호에 해당하는 상품이 없습니다.");
-        }else{
-            //파일에 수정된 데이터 저장
-            try(BufferedWriter writer=new BufferedWriter(new FileWriter(filepath))){
-                for(String line: lines){
-                    writer.write(line);
-                    writer.newLine();
-                }
-            }catch(IOException e){
-                System.out.println("예외 발생: "+e.getMessage()+"\n");
-            }
-
-            //수정완료
-            System.out.println();
-            System.out.printf("%d. %s 잔여수량이 %d으로 변경되었습니다.\n",pNum,pName,pAmount);
-        }
 
         //사용자 엔터키 입력 대기
         System.out.println();
