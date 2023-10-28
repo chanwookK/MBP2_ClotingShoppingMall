@@ -90,7 +90,6 @@ public class ManagerMain {
 
         if(select.equals("y")) modifyProduct();
         else if(select.equals("n")){
-            //checkProduct() 종료하고 다시 managerMainLooop로 돌아감.
             System.out.println();
         }
     }
@@ -106,7 +105,6 @@ public class ManagerMain {
 
         //제품 데이터 읽기
         List<String> lines = new ArrayList<>();
-        //boolean find=false; //pNum과 일치하는 상품번호가 있는지 확인할 변수
         try(BufferedReader reader= new BufferedReader(new FileReader(filepath))){
             String line;
             while((line=reader.readLine())!=null){
@@ -115,7 +113,6 @@ public class ManagerMain {
         }catch(IOException e){
             System.out.println("예외 발생: "+e.getMessage()+"\n");
         }
-
 
 
         //상품번호 예외처리
