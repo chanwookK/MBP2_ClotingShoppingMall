@@ -30,7 +30,7 @@ public class ManagerMain {
             while(true){
                 try{
                     System.out.print("AShoppingMall > ");
-                    selNum=scanner.nextInt();
+                    selNum=Integer.parseInt(scanner.next().trim());
                     if(selNum!=1 && selNum!=2){ //1이나 2를 입력하지 않은 경우. 비정상 입력
                         System.out.println("!오류: 잘못된 입력입니다. 다시 입력해주세요.");
                     }else break;
