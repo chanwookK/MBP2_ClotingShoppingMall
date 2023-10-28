@@ -30,11 +30,17 @@ public class ManagerMain {
             while(true){
                 try{
                     System.out.print("AShoppingMall > ");
-                    selNum=Integer.parseInt(scanner.next().trim());
-                    if(selNum!=1 && selNum!=2){ //1이나 2를 입력하지 않은 경우. 비정상 입력
-                        System.out.println("!오류: 잘못된 입력입니다. 다시 입력해주세요.");
-                    }else break;
-                }catch (InputMismatchException e) {
+
+                    String input=scanner.nextLine().trim();
+                    if(input.matches("[1-9][0-9]*")&&input.length()>=1){
+                        selNum=Integer.parseInt(input);
+                        if(selNum!=1 && selNum!=2){ //1이나 2를 입력하지 않은 경우. 비정상 입력
+                            System.out.println("!오류: 잘못된 입력입니다. 다시 입력해주세요.");
+                        }else break;
+                    }else {
+                        System.out.println("!오류 : 메뉴번호를 잘못 입력했습니다. 다시 입력해주세요.");
+                    }
+                }catch (NumberFormatException e) {
                     System.out.println("!오류 : 메뉴번호를 잘못 입력했습니다. 다시 입력해주세요.");
                 }
             }
@@ -124,7 +130,7 @@ public class ManagerMain {
                 String num_input=scanner.nextLine().replaceAll("\\s","");
 
                 //입력이 숫자로만 구성되고 길이가 1 이상인지 확인
-                if(num_input.matches("[0-9]+") && num_input.length()>=1){
+                if(num_input.matches("[1-9][0-9]*") && num_input.length()>=1){
                     pNum=Integer.parseInt(num_input);
                     if(pNum>0 && pNum<=lines.size()) break;
                     else{
