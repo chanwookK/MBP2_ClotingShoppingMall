@@ -1,11 +1,13 @@
+import java.util.Map;
+
 public class User {
 
     private String name;
     private String id;
     private String password;
-    private int coupon;
+    private Map<String, Integer> coupon;
 
-    public User(String name, String id, String password, int coupon){
+    public User(String name, String id, String password, Map<String, Integer> coupon){
 
         this.name = name;
         this.id = id;
@@ -39,11 +41,11 @@ public class User {
         this.password = password;
     }
 
-    public int getCoupon() {
+    public Map<String, Integer> getCoupon() {
         return coupon;
     }
 
-    public void setCoupon(int coupon) {
+    public void setCoupon(Map<String, Integer> coupon) {
         this.coupon = coupon;
     }
 }
