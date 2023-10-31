@@ -30,11 +30,17 @@ public class ManagerMain {
             while(true){
                 try{
                     System.out.print("AShoppingMall > ");
-                    selNum=scanner.nextInt();
-                    if(selNum!=1 && selNum!=2){ //1이나 2를 입력하지 않은 경우. 비정상 입력
-                        System.out.println("!오류: 잘못된 입력입니다. 다시 입력해주세요.");
-                    }else break;
-                }catch (InputMismatchException e) {
+
+                    String input=scanner.nextLine().trim();
+                    if(input.matches("[1-9][0-9]*")&&input.length()>=1){
+                        selNum=Integer.parseInt(input);
+                        if(selNum!=1 && selNum!=2){ //1이나 2를 입력하지 않은 경우. 비정상 입력
+                            System.out.println("!오류: 잘못된 입력입니다. 다시 입력해주세요.");
+                        }else break;
+                    }else {
+                        System.out.println("!오류 : 메뉴번호를 잘못 입력했습니다. 다시 입력해주세요.");
+                    }
+                }catch (NumberFormatException e) {
                     System.out.println("!오류 : 메뉴번호를 잘못 입력했습니다. 다시 입력해주세요.");
                 }
             }
@@ -90,7 +96,6 @@ public class ManagerMain {
 
         if(select.equals("y")) modifyProduct();
         else if(select.equals("n")){
-            //checkProduct() 종료하고 다시 managerMainLooop로 돌아감.
             System.out.println();
         }
     }
@@ -106,7 +111,6 @@ public class ManagerMain {
 
         //제품 데이터 읽기
         List<String> lines = new ArrayList<>();
-        //boolean find=false; //pNum과 일치하는 상품번호가 있는지 확인할 변수
         try(BufferedReader reader= new BufferedReader(new FileReader(filepath))){
             String line;
             while((line=reader.readLine())!=null){
@@ -115,7 +119,6 @@ public class ManagerMain {
         }catch(IOException e){
             System.out.println("예외 발생: "+e.getMessage()+"\n");
         }
-
 
 
         //상품번호 예외처리
@@ -127,7 +130,7 @@ public class ManagerMain {
                 String num_input=scanner.nextLine().replaceAll("\\s","");
 
                 //입력이 숫자로만 구성되고 길이가 1 이상인지 확인
-                if(num_input.matches("[0-9]+") && num_input.length()>=1){
+                if(num_input.matches("[1-9][0-9]*") && num_input.length()>=1){
                     pNum=Integer.parseInt(num_input);
                     if(pNum>0 && pNum<=lines.size()) break;
                     else{
