@@ -13,7 +13,7 @@ public class ProgramMain {
 
     void showProgramMain(){
         int selNum = 0;
-
+        String subNum = "";
         Scanner scan = new Scanner(System.in);
 
         System.out.println("A쇼핑몰에 오신 것을 환영합니다!\n");
@@ -25,17 +25,26 @@ public class ProgramMain {
         while(true){
             System.out.print("AShoppingMall > ");
             try{
-                selNum = scan.nextInt();
-                if(selNum == 1){
-                    signUp();
-                    break;
-                }else if(selNum == 2){
-                    logIn();
-                    break;
-                }else if(selNum == 3){
-                    System.out.println("\n의류 쇼핑몰 프로그램을 종료합니다.");
-                    break;
-                }else{
+                subNum = scan.nextLine();
+                String a = subNum.replaceAll(" ","");
+
+                if(a.length() == 1){
+                    selNum = Integer.parseInt(a);
+
+                    if(selNum == 1){
+                        signUp();
+                        break;
+                    }else if(selNum == 2){
+                        logIn();
+                        break;
+                    }else if(selNum == 3){
+                        System.out.println("\n의류 쇼핑몰 프로그램을 종료합니다.");
+                        break;
+                    }else{
+                        System.out.println("!오류 : 메뉴번호를 잘못 입력했습니다. 다시 입력해주세요.");
+                    }
+                }
+                else{
                     System.out.println("!오류 : 메뉴번호를 잘못 입력했습니다. 다시 입력해주세요.");
                 }
             }catch (InputMismatchException e) {
@@ -65,6 +74,7 @@ public class ProgramMain {
                         "합니다. 또한 첫 문자와 끝 문자는 비개행공백열이 아니어야 합니다.\n" +
                         "다시 입력해주세요.");
             }else{
+                name.trim();
                 break;
             }
         }
@@ -94,6 +104,8 @@ public class ProgramMain {
                 System.out.println("!오류 : 이미 존재하는 아이디입니다. 다시 입력해주세요.");
             }
             else {
+                String subName = name.replaceAll(" ","");
+                name = subName;
                 break;
             }
         }
