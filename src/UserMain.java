@@ -1,10 +1,7 @@
 import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.InputMismatchException;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,7 +18,6 @@ public class UserMain {
     }
 
     public void userMainLoop() throws IOException {
-
         int selNum;
 
         while (true) {
@@ -38,7 +34,7 @@ public class UserMain {
                 
             } catch(InputMismatchException e){
                 //한글이나 영어를 입력했을 경우
-                continue;
+                    continue;
             }
 
             switch (selNum) {
@@ -148,7 +144,7 @@ public class UserMain {
 
             //파일커넥션
             productNum = Integer.parseInt(inputString);
-            String filePath = "productlist.txt";
+            String filePath = "src/productlist.txt";
 
             try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
                 String line;
@@ -449,9 +445,7 @@ public class UserMain {
             if (selNum == 1) {
                 int k=1;
                 // 주문 내역 확인 기능
-
-                try (BufferedReader reader = new BufferedReader(new FileReader("src/User/konkuk2023.txt"))) {
-//                try (BufferedReader reader = new BufferedReader(new FileReader("src/User/"+this.user.getId()+".txt"))) {
+                try (BufferedReader reader = new BufferedReader(new FileReader("src/User/"+this.user.getId()+".txt"))) {
                     String line;
                     boolean found = false;
 
@@ -480,21 +474,33 @@ public class UserMain {
                     e.printStackTrace();
                 }
             } else if (selNum == 2) {
+                boolean checkZero = true;
+                for (String couponNum : user.getCoupon().keySet()) {
+                    if(user.getCoupon().get(couponNum) != 0) {
+                        checkZero = false;
+                    }
+                }
+
                 // 할인 쿠폰 보유량 확인 기능
-                if(this.user.getCoupon() ==0) {
+                if(checkZero) {
                     //할인 쿠폰 없는경우
                     System.out.println(user.getName()+"회원님 현재 쿠폰을 보유하고 있지 않습니다.");
                     System.out.println("메인 메뉴로 돌아가려면 엔터 키를 누르세요.");
                     in.nextLine(); //엔터 대기
                 } else {
                     System.out.println(user.getName()+"회원님의 현재 쿠폰 보유량입니다.");
-                    System.out.println("5,000원 할인 쿠폰 "+this.user.getCoupon()+"장");
+                    for (String couponNum : user.getCoupon().keySet()) {
+                        System.out.println(couponNum + "원 할인 쿠폰 " + user.getCoupon().get(couponNum) + "장");
+                    }
                     System.out.println();
                     System.out.println("메인 메뉴로 돌아가려면 엔터 키를 누르세요.");
                     in.nextLine(); // 엔터 대기
                 }
             } else if (selNum == 3) {
-                userMainLoop();
+//                userMainLoop();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+                reader.readLine();
+                return;
             } else {
                 System.out.println("!오류 : 메뉴번호를 잘못 입력했습니다. 다시 입력해주세요.");
             }
