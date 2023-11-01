@@ -15,10 +15,10 @@ public class Main {
 //        ManagerMain manager=new ManagerMain(user);
 
         //User test용
-//        Map<String, Integer> myMap = new HashMap<>();
-//        myMap.put("5000원", 3);
-//        User user = new User("곽민재", "thisisId", "thisisPassword",  myMap);
-//        UserMain userMain = new UserMain(user);
+        Map<String, Integer> myMap = new HashMap<>();
+        myMap.put("5000", 3);
+        User user = new User("곽민재", "konkuk2023", "thisisPassword",  myMap);
+        UserMain userMain = new UserMain(user);
 
     }
 }
