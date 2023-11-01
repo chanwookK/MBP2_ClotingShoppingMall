@@ -199,7 +199,7 @@ public class UserMain {
         
         //유저 정보 받아오기
         List<String> userInfo = new ArrayList<>();
-        String filePath = user.getId()+".txt";
+        String filePath = "src/User/"+user.getId()+".txt";
 
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line;
@@ -310,7 +310,7 @@ public class UserMain {
 
 
         //productlist 수정
-        filePath = "productlist.txt";
+        filePath = "src/productlist.txt";
 
         try {
             // 파일 읽기
@@ -351,7 +351,7 @@ public class UserMain {
         }
 
         //user 파일 수정
-        filePath = user.getId() + ".txt";
+        filePath = "src/User/"+user.getId() + ".txt";
 
         try {
             // 파일 읽기
@@ -497,9 +497,6 @@ public class UserMain {
                     in.nextLine(); // 엔터 대기
                 }
             } else if (selNum == 3) {
-//                userMainLoop();
-                BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-                reader.readLine();
                 return;
             } else {
                 System.out.println("!오류 : 메뉴번호를 잘못 입력했습니다. 다시 입력해주세요.");
