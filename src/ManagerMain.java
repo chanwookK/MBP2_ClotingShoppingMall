@@ -45,10 +45,13 @@ public class ManagerMain {
                 }
             }
 
-            if(selNum==1) checkProduct();
+            if(selNum==1){
+                checkProduct();
+                break;
+            }
             else if(selNum==2){
                 System.out.println("\n관리자님, 로그아웃을 완료했습니다.");
-                break;
+                return;
             }
         }
         scanner.close();
@@ -127,14 +130,20 @@ public class ManagerMain {
                 System.out.println("원하시는 상품의 번호를 입력해주세요");
                 System.out.print("AShoppingMall > ");
                 //공백제거
-                String num_input=scanner.nextLine().replaceAll("\\s","");
+                //String num_input=scanner.nextLine().replaceAll("\\s","");
+                String num_input = scanner.nextLine(); // 공백 없이 입력 받음
 
-                //입력이 숫자로만 구성되고 길이가 1 이상인지 확인
-                if(num_input.matches("[1-9][0-9]*") && num_input.length()>=1){
-                    pNum=Integer.parseInt(num_input);
-                    if(pNum>0 && pNum<=lines.size()) break;
-                    else{
-                        System.out.println("!오류: 입력하신 상품번호에 해당하는 상품이 없습니다.\n");
+                //입력에 공백이 포함되지 않도록
+                if(!num_input.contains(" ")){
+                    //입력이 숫자로만 구성되고 길이가 1 이상인지 확인
+                    if(num_input.matches("[1-9][0-9]*") && num_input.length()>=1){
+                        pNum=Integer.parseInt(num_input);
+                        if(pNum>0 && pNum<=lines.size()) break;
+                        else{
+                            System.out.println("!오류: 입력하신 상품번호에 해당하는 상품이 없습니다.\n");
+                        }
+                    }else{
+                        System.out.println("!오류: 문법 규칙에 맞는 입력이 아닙니다.\n");
                     }
                 }else{
                     System.out.println("!오류: 문법 규칙에 맞는 입력이 아닙니다.\n");

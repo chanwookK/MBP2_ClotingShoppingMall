@@ -1,9 +1,10 @@
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.util.HashMap;
 import java.util.InputMismatchException;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.regex.Pattern;
+import java.lang.Integer;
 
 public class ProgramMain {
 
@@ -13,24 +14,22 @@ public class ProgramMain {
 
     void showProgramMain(){
         int selNum = 0;
-        String subNum = "";
+
         Scanner scan = new Scanner(System.in);
 
-        System.out.println("A쇼핑몰에 오신 것을 환영합니다!\n");
-        System.out.println("이용할 서비스의 번호를 입력하세요");
-        System.out.println("[회원가입 및 로그인]");
-        System.out.println("1. 회원가입");
-        System.out.println("2. 로그인");
-        System.out.println("3. 종료");
-        while(true){
-            System.out.print("AShoppingMall > ");
-            try{
-                subNum = scan.nextLine();
-                String a = subNum.replaceAll(" ","");
+        boolean exit=false;
 
-                if(a.length() == 1){
-                    selNum = Integer.parseInt(a);
-
+        while(!exit){
+            System.out.println("A쇼핑몰에 오신 것을 환영합니다!\n");
+            System.out.println("이용할 서비스의 번호를 입력하세요");
+            System.out.println("[회원가입 및 로그인]");
+            System.out.println("1. 회원가입");
+            System.out.println("2. 로그인");
+            System.out.println("3. 종료");
+            while(true){
+                System.out.print("AShoppingMall > ");
+                try{
+                    selNum = scan.nextInt();
                     if(selNum == 1){
                         signUp();
                         break;
@@ -39,18 +38,16 @@ public class ProgramMain {
                         break;
                     }else if(selNum == 3){
                         System.out.println("\n의류 쇼핑몰 프로그램을 종료합니다.");
+                        exit=true;
                         break;
                     }else{
                         System.out.println("!오류 : 메뉴번호를 잘못 입력했습니다. 다시 입력해주세요.");
                     }
-                }
-                else{
+                }catch (InputMismatchException | IOException e) {
+                    scan.nextLine();
                     System.out.println("!오류 : 메뉴번호를 잘못 입력했습니다. 다시 입력해주세요.");
-                }
-            }catch (InputMismatchException e) {
-                scan.nextLine();
-                System.out.println("!오류 : 메뉴번호를 잘못 입력했습니다. 다시 입력해주세요.");
 
+                }
             }
         }
 
@@ -74,7 +71,6 @@ public class ProgramMain {
                         "합니다. 또한 첫 문자와 끝 문자는 비개행공백열이 아니어야 합니다.\n" +
                         "다시 입력해주세요.");
             }else{
-                name.trim();
                 break;
             }
         }
@@ -104,8 +100,6 @@ public class ProgramMain {
                 System.out.println("!오류 : 이미 존재하는 아이디입니다. 다시 입력해주세요.");
             }
             else {
-                String subName = name.replaceAll(" ","");
-                name = subName;
                 break;
             }
         }
@@ -144,7 +138,122 @@ public class ProgramMain {
 
     }
 
-    void logIn(){
-        System.out.println("로그인");
+    public void logIn() throws IOException {
+
+        final String managerName = "관리자";
+        final String managerId = "adminadminadmin";
+        final String managerPassword = "password00";
+
+        String name;
+        String id;
+        String password;
+
+        int coupon=0;
+
+        String filepath = "";
+        boolean exitOuterLoop = false;
+
+        Scanner scanner = new Scanner(System.in);
+
+        // ID 입력받기
+        while (true) {
+            System.out.println("\n[로그인]");
+            System.out.println("아이디를 입력하세요.");
+            System.out.print("AShoppingMall > ");
+            id = scanner.nextLine();
+            filepath= "src/User/"+id+".txt";
+
+            // ID가 관리자인 경우
+            if (id.equals(managerId)) {
+                break;
+            }
+
+            // ID 입력 조건
+            if (id.contains(" ") || id.length() < 6 || 10 < id.length() || !id.matches("^[a-zA-Z0-9]*$")) {
+                System.out.println("!오류 : 등록되지 않은 아이디입니다. 다시 입력해주세요.");
+            }
+            else {
+                // ID가 user 폴더에 저장된 userId.txt 데이터에 존재하는 경우
+                File file = new File(filepath);
+                if (file.exists()) {
+                    break;
+                }
+                else {
+                    System.out.println("!오류 : 등록되지 않은 아이디입니다. 다시 입력해주세요.");
+                }
+            }
+
+        }
+
+        // PW 입력받기
+        while (true) {
+            if (exitOuterLoop) {
+                break;
+            }
+            System.out.println("비밀번호를 입력하세요.");
+            System.out.print("AShoppingmall > ");
+            password = scanner.nextLine();
+
+            // manager ID와 PW일경우
+            if (password.equals(managerPassword)) {
+                Map<String, Integer> managerCoupon = new HashMap<>();
+                managerCoupon.put("0", 0);
+                User user = new User(managerName, id, password, managerCoupon);
+                ManagerMain managerMain = new ManagerMain(user);
+                break;
+            }
+
+            // PW 입력조건
+            if (password.length() < 8 || 20 < password.length() || !password.matches("^[a-zA-Z0-9]*$")) {
+                System.out.println("!오류 : 틀린 비밀번호입니다. 다시 입력해주세요.");
+            }
+
+            else { // 입력조건 부합
+                File file = new File(filepath);
+                BufferedReader reader = new BufferedReader((new FileReader(file)));
+                String line;
+                int lineNumber = 0;
+                while ((line = reader.readLine()) != null) {
+                    if (lineNumber == 2) {
+                        // 위에서 입력한 ID에 부합하지 않는 PW가 입력된 경우
+                        if (!line.contains(password)) {
+                            System.out.println("!오류 : 틀린 비밀번호입니다. 다시 입력해주세요.");
+                            break;
+                        }
+                    }
+
+                    // 사용자.txt에서 name과 coupon 정보 가져온다
+                    name = reader.readLine();
+                    lineNumber++;
+                    Map<String, Integer> couponMap = new HashMap<>();
+                    if (lineNumber == 4) {
+                        String[] couponPairs = line.split(",");
+                        for (String pair : couponPairs) {
+                            String[] parts = pair.split("/");
+                            if (parts.length == 2) {
+                                String discount_amount = parts[0];
+                                int coupon_amount = Integer.parseInt(parts[1]);
+                                couponMap.put(discount_amount, coupon_amount);
+                            }
+                        }
+
+                        // 쿠폰 할인 가격들을 불러와 합치기
+                        for (Map.Entry<String, Integer> entry : couponMap.entrySet()) {
+                            coupon += entry.getValue();
+                        }
+                    }
+
+                    // 위에서 입력한 ID에 부합하는 PW가 입력된 경우
+                    System.out.println("\n로그인 완료!");
+
+                    // 등록된 일반 유저의 ID와 PW일경우
+                    User user = new User(name, id, password, couponMap);
+                    UserMain usermain = new UserMain(user);
+                    exitOuterLoop = true;
+                    break;
+                }
+                reader.close();
+            }
+        }
     }
 }
