@@ -134,6 +134,6 @@ public class ProgramMain {
 
     void logIn(){
         System.out.println("로그인");
-        //backup
+        System.out.println("백업되었는지 확인");
     }
 }
