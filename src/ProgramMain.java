@@ -135,5 +135,6 @@ public class ProgramMain {
     void logIn(){
         System.out.println("로그인");
         System.out.println("백업되었는지 확인");
+        System.out.println("확인합니다.");
     }
 }
