@@ -120,7 +120,6 @@ public class UserMain {
             productSearch(); // 재귀 호출을 통해 다시 상품명 검색
         }
     }
-
     public void productOrder() throws IOException {
 
         boolean i = false;
@@ -131,60 +130,72 @@ public class UserMain {
         int j = 0;
         String inputString;
 
-        //상품번호 입력
-        System.out.println("[주문] 상품 번호를 입력해주세요.");
-        inputString = in.nextLine();
-        
-        //상품번호 문법규칙에 부합하는지 체크
-        Pattern pattern = Pattern.compile("[0-9]+");
-        Matcher matcher = pattern.matcher(inputString);
+        while(true) {
+            //상품번호 입력
+            System.out.println("[주문] 상품 번호를 입력해주세요.");
 
-        //문법규칙에 부합한다면
-        if(matcher.matches()){
+            inputString = in.nextLine();
 
-            //파일커넥션
-            productNum = Integer.parseInt(inputString);
-            String filePath = "src/productlist.txt";
 
-            try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    j++;
-                    parts = line.split("/");
-                    if(parts[0].equals(inputString)){
+            //상품번호 문법규칙에 부합하는지 체크
+            Pattern pattern = Pattern.compile("[1-9][0-9]*");
+            Matcher matcher = pattern.matcher(inputString);
 
-                        //상품수량이 0인 경우// 재고가 없을 경우
-                        if(parts[3].equals("0")) {
-                            System.out.println("해당 상품은 재고가 없습니다.");
-                            return;
+            //문법규칙에 부합한다면
+            if (matcher.matches()) {
+
+                //파일커넥션
+                try {
+                    productNum = Integer.parseInt(inputString);
+                }catch (NumberFormatException e){
+                    System.out.println("!오류: 존재하지 않는 상품 번호입니다.");
+                    continue;
+                }
+                String filePath = "src/productlist.txt";
+
+                try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        j++;
+                        parts = line.split("/");
+                        if (parts[0].equals(inputString)) {
+
+                            //상품수량이 0인 경우// 재고가 없을 경우
+                            if (parts[3].equals("0")) {
+                                System.out.println("해당 상품은 재고가 없습니다.");
+                                return;
+                            }
+
+                            //모든 조건 만족-> 주문 처리로 넘어감
+                            i = true;
+                            break;
                         }
 
-                        //모든 조건 만족-> 주문 처리로 넘어감
-                        i = true;
-                        break;
                     }
-
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return;
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
-                return;
+                targetLineNumber = j;
+
+
+
+            } else {
+                //오류 발생(문법규칙 규합 X)
+                System.out.println("!오류: 잘못된 입력입니다. 다시 입력해주세요.");
+
+                continue;
             }
-            targetLineNumber = j;
 
-
-        }else{
-            //오류 발생(문법규칙 규합 X)
-            System.out.println("!오류: 잘못된 입력입니다. 다시 입력해주세요.");
-            return;
+            if (!i) {
+                //오류 발생(해당 상품번호 없음)
+                System.out.println("!오류: 존재하지 않는 상품 번호입니다.");
+                continue;
+            }
+            break;
         }
 
-        if(!i){
-            //오류 발생(해당 상품번호 없음)
-            System.out.println("!오류: 존재하지 않는 상품 번호입니다.");
-            return;
-        }
-
-
+        int price = Integer.parseInt(parts[2]);
         i = false;
 
         //주문 로직
@@ -195,8 +206,8 @@ public class UserMain {
                 break;
             }
         }
-        
-        
+
+
         //유저 정보 받아오기
         List<String> userInfo = new ArrayList<>();
         String filePath = "src/User/"+user.getId()+".txt";
@@ -214,7 +225,7 @@ public class UserMain {
         int userAmount = 0; //변경 금액
         int userAmount2 = 0 ; //10만원 이하 누적 변경 금액
         int addCoupon = 0; //발급해야할 쿠폰 갯수
-        
+
         //쿠폰 없는 주문처리
         if(!i){
             System.out.println(parts[0]+"."+parts[1]+" 구매가 완료되었습니다. 감사합니다.");
@@ -248,16 +259,27 @@ public class UserMain {
 
             //비정상결과 판단
             while (true) {
-                try {
-                    //사용할 쿠폰 갯수 입력 받기
-                    couponN = in.nextInt();
-                    couponType = "5000";//임시로 작성
 
-                } catch (InputMismatchException e) {
-                    //잘못된 입력일 경우
-                    System.out.println("!오류:잘못된 입력입니다. 다시 입력해주세요.");
-                    continue;
+                String scouponN  = in.nextLine();
+                //사용할 쿠폰 갯수 입력 받기
+                couponType = "5000";//임시로 작성
+
+                //잘못된 입력일 경우
+                Pattern pattern = Pattern.compile("[1-9][0-9]*");
+                Pattern pattern2 = Pattern.compile("0+");
+                Matcher matcher = pattern.matcher(scouponN);
+                Matcher matcher2 = pattern2.matcher(scouponN);
+
+                if(!matcher.matches()) {
+                    if(matcher2.matches()){
+                    }
+                    else {
+                        System.out.println("!오류:잘못된 입력입니다. 다시 입력해주세요.");
+                        continue;
+                    }
                 }
+
+                couponN = Integer.parseInt(scouponN);
                 //보유한 할인 쿠폰 수량보다 더 큰 숫자를 입력한 경우
                 if (user.getCoupon().get(couponType) < couponN) {
                     System.out.println(user.getName() + "회원님의 현재 쿠폰 보유량은 " + user.getCoupon().get(couponType) + "입니다. 다시 입력해주세요");
@@ -268,7 +290,7 @@ public class UserMain {
                 outOfPrice = Integer.parseInt(parts[2]) - (Integer.parseInt(couponType) * couponN);
                 int maxUseCouponNum = Integer.parseInt(parts[2]) / Integer.parseInt(couponType);
 
-                if (outOfPrice < 0) {
+                if (outOfPrice < -Integer.parseInt(couponType)) {
                     System.out.println("해당 상품 구매 시 최대 사용 가능한 쿠폰은 " + maxUseCouponNum + "장입니다. 다시 입력해주세요.");
                     continue;
                 }
@@ -277,11 +299,11 @@ public class UserMain {
             }
 
             int discountPrice = Integer.parseInt(couponType) * couponN;
-            int price = Integer.parseInt(parts[2]) - discountPrice;
-            
+            price = Integer.parseInt(parts[2]) - discountPrice;
+
             //유저객체의 쿠폰 감소
             user.getCoupon().put(couponType, user.getCoupon().get(couponType) - couponN);
-            
+
             System.out.println("지불할 금액은 " + price + "원 입니다.");
 
 
@@ -291,7 +313,7 @@ public class UserMain {
             for (String couponNum : user.getCoupon().keySet()) {
 
                 System.out.println(couponNum + "원 할인 쿠폰 " + user.getCoupon().get(couponNum) + "장");
-                System.out.println(parts[0] + "." + parts[1] + "\n  가격: " + parts[2]);
+                System.out.println(parts[0] + "." + parts[1] + "\n  가격: " + price);
             }
 
             String[] amount = userInfo.get(2).split("/");
@@ -410,7 +432,7 @@ public class UserMain {
             System.out.println("현재 날짜: " + formattedDate);
 
             //마지막 행에 추가
-            stringBuilder.append(parts[0]+"/"+parts[1]+"/"+parts[2]+"/"+ formattedDate).append("\n");
+            stringBuilder.append(parts[0]+"/"+parts[1]+"/"+price+"/"+ formattedDate).append("\n");
 
             bufferedReader.close();
 
@@ -425,8 +447,6 @@ public class UserMain {
 
 
     }
-
-
 
     public void showMyPage() throws IOException {
         int selNum;
