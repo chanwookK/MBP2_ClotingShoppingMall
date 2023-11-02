@@ -11,7 +11,7 @@ public class Main {
 //        ProgramMain main = new ProgramMain();
 
         //Manager test용
-//        User user = new User("관리자","adminadminadmin","pass00",0);
+//        User user = new User("관리자","adminadminadmin","pass00",myMap);
 //        ManagerMain manager=new ManagerMain(user);
 
         //User test용

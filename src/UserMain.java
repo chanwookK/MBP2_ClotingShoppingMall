@@ -50,6 +50,7 @@ public class UserMain {
                 case 4:
                     return;
                 default:
+                    System.out.println("!오류 : 메뉴번호를 잘못 입력했습니다. 다시 입력해주세요.");
             }
         }
 
