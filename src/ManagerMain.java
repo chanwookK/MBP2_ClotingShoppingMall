@@ -92,7 +92,7 @@ public class ManagerMain {
             select=scanner.nextLine();
             select=select.trim();
             if(!select.equals("y") && !select.equals("n")){
-                System.out.println("!오류: 잘못된 입력입니다. 다시 입력해주세요.");
+                System.out.println("!오류 : 잘못된 입력입니다. 다시 입력해주세요.");
             }else break;
         }
 
@@ -128,27 +128,26 @@ public class ManagerMain {
             try{
                 System.out.println("원하시는 상품의 번호를 입력해주세요");
                 System.out.print("AShoppingMall > ");
-                //공백제거
-                //String num_input=scanner.nextLine().replaceAll("\\s","");
-                String num_input = scanner.nextLine(); // 공백 없이 입력 받음
 
-                //입력에 공백이 포함되지 않도록
-                if(!num_input.contains(" ")){
-                    //입력이 숫자로만 구성되고 길이가 1 이상인지 확인
-                    if(num_input.matches("[1-9][0-9]*") && num_input.length()>=1){
+                String num_input = scanner.nextLine(); // 공백 없이 입력 받음
+                //입력에 공백이 포함되지 않고 길이가 1이상인지 확인
+                if(!num_input.contains(" ")&& num_input.length()>=1){
+                    //입력이 0을 포함 안하는 경우
+                    if(num_input.matches("[1-9][0-9]*")){
                         pNum=Integer.parseInt(num_input);
                         if(pNum>0 && pNum<=lines.size()) break;
-                        else{
-                            System.out.println("!오류: 입력하신 상품번호에 해당하는 상품이 없습니다.\n");
+                        else{ //상품번호가 존재하는 범위를 벗어나는 경우
+                            System.out.println("!오류 : 입력하신 상품번호에 해당하는 상품이 없습니다.\n");
                         }
-                    }else{
-                        System.out.println("!오류: 문법 규칙에 맞는 입력이 아닙니다.\n");
+                    }else if(num_input.startsWith("0")){ //0선행
+                        System.out.println("!오류 : 입력하신 상품번호에 해당하는 상품이 없습니다.\n");
                     }
-                }else{
-                    System.out.println("!오류: 문법 규칙에 맞는 입력이 아닙니다.\n");
+                }else{ //공백이 포함된 문법오류
+                    System.out.println("!오류 : 문법 규칙에 맞는 입력이 아닙니다.\n");
                 }
+
             }catch(Exception e) {
-                System.out.println("예외 발생: "+e.getMessage()+"\n");
+                System.out.println("예외 발생 : "+e.getMessage()+"\n");
             }
         }
 
@@ -163,20 +162,20 @@ public class ManagerMain {
 
                 //상품 수량 입력에 앞뒤 공백이 있었던 경우
                 if(check_amount.length()!=amount_input.length()){
-                    System.out.println("!오류: 문법 규칙에 맞는 입력이 아닙니다.\n");
+                    System.out.println("!오류 : 문법 규칙에 맞는 입력이 아닙니다.\n");
                 }else if(!amount_input.matches("^[0-9]+$")){
                     //숫자로만 이루어져있어야하며 중간에 공백이 있으면 안된다.
-                    System.out.println("!오류: 문법 규칙에 맞는 입력이 아닙니다.\n");
+                    System.out.println("!오류 : 문법 규칙에 맞는 입력이 아닙니다.\n");
                 }else{
                     pAmount=Integer.parseInt(amount_input);
                     if(pAmount>=0){ //0이상의 자연수면서, 공백이 없는 입력
                         break;
                     }else{
-                        System.out.println("!오류: 수량은 0 이상의 숫자여야합니다.\n");
+                        System.out.println("!오류 : 수량은 0 이상의 숫자여야합니다.\n");
                     }
                 }
             }catch(Exception e){
-                System.out.println("예외 발생: "+e.getMessage()+"\n");
+                System.out.println("예외 발생 : "+e.getMessage()+"\n");
             }
         }
 
