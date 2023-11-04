@@ -18,11 +18,12 @@ public class Main {
         //User test용
 //        Map<String, Integer> myMap = new HashMap<>();
 //        myMap.put("5000", 3);
+//        myMap.put("4000", 6);
 //        User user = new User("곽민재", "konkuk2023", "thisisPassword",  myMap);
 //        UserMain userMain = new UserMain(user);
 
         //Program test용
-        ProgramMain main = new ProgramMain();
+//        ProgramMain main = new ProgramMain();
 
     }
 }

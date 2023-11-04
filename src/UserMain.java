@@ -20,21 +20,23 @@ public class UserMain {
     public void userMainLoop() throws IOException {
         int selNum;
 
+
         while (true) {
-
-
             System.out.println("[메인 메뉴] 실행할 메뉴를 선택해주세요.");
             System.out.println("1. 상품검색");
             System.out.println("2. 주문");
             System.out.println("3. 마이페이지");
             System.out.println("4. 로그아웃");
+            System.out.print("AShoppingMall > ");
             try {
                 selNum = in.nextInt();
                 in.nextLine();
                 
             } catch(InputMismatchException e){
                 //한글이나 영어를 입력했을 경우
-                    continue;
+                System.out.println("!오류: 잘못된 입력입니다. 다시 입력해주세요.");
+                in.nextLine();
+                continue;
             }
 
             switch (selNum) {
@@ -42,6 +44,7 @@ public class UserMain {
                     productSearch();
                     break;
                 case 2:
+                    System.out.println();
                     productOrder();
                     break;
                 case 3:
@@ -50,6 +53,7 @@ public class UserMain {
                 case 4:
                     return;
                 default:
+                    System.out.println("!오류: 잘못된 입력입니다. 다시 입력해주세요.");
             }
         }
 
@@ -59,15 +63,17 @@ public class UserMain {
 
     public void productSearch() throws IOException{
         String userWantName;
-        String searchedName;
+
 
         ArrayList<ArrayList<String>> productsList = new ArrayList<>();
         String parts[];
         boolean empty = true;
 
         // 사용자로부터 상품명 입력 받기
+        System.out.println();
         System.out.println("[상품 검색]");
         System.out.println("검색할 상품명을 입력해주세요:");
+        System.out.print("AShoppingMall > ");
         userWantName = in.nextLine();
 
         // 문법 규칙 검사
@@ -111,7 +117,9 @@ public class UserMain {
             }
 
             System.out.println("메인 메뉴로 돌아가려면 엔터 키를 누르세요.");
+            System.out.print("AShoppingMall > ");
             in.nextLine(); // 엔터 대기
+            System.out.println();
             userMainLoop();
 
         } else {
@@ -132,7 +140,8 @@ public class UserMain {
 
         while(true) {
             //상품번호 입력
-            System.out.println("[주문] 상품 번호를 입력해주세요.");
+            System.out.println("[주문]\n상품 번호를 입력해주세요.");
+            System.out.print("AShoppingMall > ");
 
             inputString = in.nextLine();
 
@@ -162,7 +171,9 @@ public class UserMain {
 
                             //상품수량이 0인 경우// 재고가 없을 경우
                             if (parts[3].equals("0")) {
+                                System.out.println();
                                 System.out.println("해당 상품은 재고가 없습니다.");
+                                System.out.println();
                                 return;
                             }
 
@@ -250,12 +261,13 @@ public class UserMain {
             for (String couponNum : user.getCoupon().keySet()) {
 
                 System.out.println(couponNum + "원 할인 쿠폰 " + user.getCoupon().get(couponNum) + "장");
-                System.out.println(parts[0] + "." + parts[1] + "\n  가격: " + parts[2]);
             }
 
             System.out.println();
+            System.out.println(parts[0] + ". " + parts[1] + "\n  가격: " + parts[2]);
             System.out.println();
             System.out.println("사용할 쿠폰의 수를 입력해주세요.(쿠폰 사용을 원하지 않을 시 '0'입력)");
+            System.out.print("AShoppingMall > ");
 
             //비정상결과 판단
             while (true) {
@@ -274,7 +286,8 @@ public class UserMain {
                     if(matcher2.matches()){
                     }
                     else {
-                        System.out.println("!오류:잘못된 입력입니다. 다시 입력해주세요.");
+                        System.out.println("!오류: 잘못된 입력입니다. 다시 입력해주세요.");
+                        in.nextLine();
                         continue;
                     }
                 }
@@ -454,13 +467,21 @@ public class UserMain {
 
 
         while (true) {
+            System.out.println();
             System.out.println("[마이페이지] 원하는 메뉴를 선택하세요.");
             System.out.println("1. 주문 내역 확인");
             System.out.println("2. 할인 쿠폰 보유량 확인");
             System.out.println("3. 뒤로가기");
+            System.out.print("AShoppingMall > ");
+            try {
+                selNum = in.nextInt();
+                in.nextLine();
+            } catch(InputMismatchException e) {
+                System.out.println("!오류: 잘못된 입력입니다. 다시 입력해주세요.");
+                in.nextLine();
+                continue;
+            }
 
-            selNum = in.nextInt();
-            in.nextLine();
 
             if (selNum == 1) {
                 int k=1;
@@ -472,6 +493,7 @@ public class UserMain {
                     for(int i=0; i<4; i++) {
                         reader.readLine();
                     }
+                    System.out.println();
 
                     // 해당 유저의 주문 내역 찾기
                     while ((line = reader.readLine()) != null) {
@@ -489,6 +511,7 @@ public class UserMain {
                     }
                     System.out.println();
                     System.out.println("메인 메뉴로 돌아가려면 엔터 키를 누르세요.");
+                    System.out.print("AShoppingMall > ");
                     in.nextLine(); // 엔터 대기
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -504,16 +527,21 @@ public class UserMain {
                 // 할인 쿠폰 보유량 확인 기능
                 if(checkZero) {
                     //할인 쿠폰 없는경우
+                    System.out.println();
                     System.out.println(user.getName()+"회원님 현재 쿠폰을 보유하고 있지 않습니다.");
+                    System.out.println();
                     System.out.println("메인 메뉴로 돌아가려면 엔터 키를 누르세요.");
+                    System.out.print("AShoppingMall > ");
                     in.nextLine(); //엔터 대기
                 } else {
+                    System.out.println();
                     System.out.println(user.getName()+"회원님의 현재 쿠폰 보유량입니다.");
                     for (String couponNum : user.getCoupon().keySet()) {
                         System.out.println(couponNum + "원 할인 쿠폰 " + user.getCoupon().get(couponNum) + "장");
                     }
                     System.out.println();
                     System.out.println("메인 메뉴로 돌아가려면 엔터 키를 누르세요.");
+                    System.out.print("AShoppingMall > ");
                     in.nextLine(); // 엔터 대기
                 }
             } else if (selNum == 3) {
