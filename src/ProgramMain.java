@@ -220,6 +220,7 @@ public class ProgramMain {
                 BufferedReader reader = new BufferedReader((new FileReader(file)));
                 String line;
                 int lineNumber = 0;
+                name = reader.readLine();
                 while ((line = reader.readLine()) != null) {
                     if (lineNumber == 2) {
                         // 위에서 입력한 ID에 부합하지 않는 PW가 입력된 경우
@@ -230,7 +231,7 @@ public class ProgramMain {
                     }
 
                     // 사용자.txt에서 name과 coupon 정보 가져온다
-                    name = reader.readLine();
+                    //name = reader.readLine();
                     lineNumber++;
                     Map<String, Integer> couponMap = new HashMap<>();
                     if (lineNumber == 4) {
