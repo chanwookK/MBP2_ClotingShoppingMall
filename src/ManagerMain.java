@@ -54,7 +54,7 @@ public class ManagerMain {
                 return;
             }
         }
-        scanner.close();
+        //scanner.close();
     }
 
     //전체 상품 데이터 체크하는 함수

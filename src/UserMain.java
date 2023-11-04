@@ -13,7 +13,7 @@ public class UserMain {
 
         this.user = user;
         userMainLoop();
-        in.close();
+        //in.close();
 
     }
 

@@ -22,8 +22,7 @@ public class Main {
 //        User user = new User("곽민재", "konkuk2023", "thisisPassword",  myMap);
 //        UserMain userMain = new UserMain(user);
 
-        //Program test용
-//        ProgramMain main = new ProgramMain();
+          ProgramMain main = new ProgramMain();
 
     }
 }
