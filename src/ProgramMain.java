@@ -163,9 +163,9 @@ public class ProgramMain {
         Scanner scanner = new Scanner(System.in);
 
         // ID 입력받기
+        System.out.println("\n[로그인]");
+        System.out.println("아이디를 입력하세요.");
         while (true) {
-            System.out.println("\n[로그인]");
-            System.out.println("아이디를 입력하세요.");
             System.out.print("AShoppingMall > ");
             id = scanner.nextLine();
             filepath= "src/User/"+id+".txt";
@@ -193,19 +193,21 @@ public class ProgramMain {
         }
 
         // PW 입력받기
+        System.out.println("비밀번호를 입력하세요.");
         while (true) {
             if (exitOuterLoop) {
                 break;
             }
-            System.out.println("비밀번호를 입력하세요.");
             System.out.print("AShoppingmall > ");
             password = scanner.nextLine();
 
             // manager ID와 PW일경우
-            if (password.equals(managerPassword)) {
+            if (id.equals(managerId) && password.equals(managerPassword)) {
+
                 Map<String, Integer> managerCoupon = new HashMap<>();
                 managerCoupon.put("0", 0);
                 User user = new User(managerName, id, password, managerCoupon);
+                System.out.println();
                 ManagerMain managerMain = new ManagerMain(user);
                 break;
             }
@@ -216,43 +218,51 @@ public class ProgramMain {
             }
 
             else { // 입력조건 부합
+
                 File file = new File(filepath);
                 BufferedReader reader = new BufferedReader((new FileReader(file)));
-                String line;
-                int lineNumber = 0;
-                name = reader.readLine();
-                while ((line = reader.readLine()) != null) {
-                    if (lineNumber == 2) {
-                        // 위에서 입력한 ID에 부합하지 않는 PW가 입력된 경우
-                        if (!line.contains(password)) {
-                            System.out.println("!오류 : 틀린 비밀번호입니다. 다시 입력해주세요.");
+                name = reader.readLine(); //이름 가져오기
+                String truePassword = reader.readLine(); //PW 가져오기
+
+                if(!truePassword.equals(password)){ //PW 잘못 입력한 경우
+                    System.out.println("!오류 : 틀린 비밀번호입니다. 다시 입력해주세요.");
+                }
+                else{ //ID에 부합하는 PW 입력한 경우
+
+                    String line;
+                    int lineNumber = 2;
+
+                    Map<String, Integer> couponMap = new HashMap<>();
+
+                    while ((line = reader.readLine()) != null) {
+
+                        System.out.println("\n"+line);
+                        lineNumber++;
+                        // 사용자.txt에서 coupon 정보 가져온다
+
+                        if (lineNumber == 4) {
+                            String[] couponPairs = line.split(",");
+                            for (String pair : couponPairs) {
+                                String[] parts = pair.split("/");
+                                if (parts.length == 2) {
+                                    String discount_amount = parts[0];
+                                    int coupon_amount = Integer.parseInt(parts[1]);
+                                    couponMap.put(discount_amount, coupon_amount);
+                                }
+                            }
+
+                            // 쿠폰 할인 가격들을 불러와 합치기
+                            for (Map.Entry<String, Integer> entry : couponMap.entrySet()) {
+                                coupon += entry.getValue();
+                            }
                             break;
                         }
+
                     }
-
-                    // 사용자.txt에서 name과 coupon 정보 가져온다
-                    //name = reader.readLine();
-                    lineNumber++;
-                    Map<String, Integer> couponMap = new HashMap<>();
-                    if (lineNumber == 4) {
-                        String[] couponPairs = line.split(",");
-                        for (String pair : couponPairs) {
-                            String[] parts = pair.split("/");
-                            if (parts.length == 2) {
-                                String discount_amount = parts[0];
-                                int coupon_amount = Integer.parseInt(parts[1]);
-                                couponMap.put(discount_amount, coupon_amount);
-                            }
-                        }
-
-                        // 쿠폰 할인 가격들을 불러와 합치기
-                        for (Map.Entry<String, Integer> entry : couponMap.entrySet()) {
-                            coupon += entry.getValue();
-                        }
-                    }
-
                     // 위에서 입력한 ID에 부합하는 PW가 입력된 경우
-                    System.out.println("\n로그인 완료!");
+                    System.out.println("\n로그인 완료!\n");
+
+                    reader.close();
 
                     // 등록된 일반 유저의 ID와 PW일경우
                     User user = new User(name, id, password, couponMap);
@@ -260,8 +270,9 @@ public class ProgramMain {
                     UserMain usermain = new UserMain(user);
                     exitOuterLoop = true;
                     break;
+
                 }
-                reader.close();
+
             }
         }
     }
