@@ -236,7 +236,6 @@ public class ProgramMain {
 
                     while ((line = reader.readLine()) != null) {
 
-                        System.out.println("\n"+line);
                         lineNumber++;
                         // 사용자.txt에서 coupon 정보 가져온다
 
