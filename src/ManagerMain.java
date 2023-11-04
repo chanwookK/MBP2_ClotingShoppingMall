@@ -47,14 +47,13 @@ public class ManagerMain {
 
             if(selNum==1){
                 checkProduct();
-                break;
             }
             else if(selNum==2){
                 System.out.println("\n관리자님, 로그아웃을 완료했습니다.");
-                return;
+                break;
             }
         }
-        scanner.close();
+        //scanner.close();
     }
 
     //전체 상품 데이터 체크하는 함수

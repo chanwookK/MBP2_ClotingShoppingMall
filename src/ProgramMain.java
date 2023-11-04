@@ -8,6 +8,10 @@ import java.lang.Integer;
 
 public class ProgramMain {
 
+    final String managerName = "관리자";
+    final String managerId = "adminadminadmin";
+    final String managerPassword = "password00";
+
     public ProgramMain() {
         showProgramMain();
     }
@@ -27,6 +31,9 @@ public class ProgramMain {
             System.out.println("2. 로그인");
             System.out.println("3. 종료");
             while(true){
+
+                //Scanner scan = new Scanner(System.in);
+
                 System.out.print("AShoppingMall > ");
                 try{
                     selNum = scan.nextInt();
@@ -140,9 +147,9 @@ public class ProgramMain {
 
     public void logIn() throws IOException {
 
-        final String managerName = "관리자";
+        /*final String managerName = "관리자";
         final String managerId = "adminadminadmin";
-        final String managerPassword = "password00";
+        final String managerPassword = "password00";*/
 
         String name;
         String id;
