@@ -255,6 +255,7 @@ public class ProgramMain {
 
                     // 등록된 일반 유저의 ID와 PW일경우
                     User user = new User(name, id, password, couponMap);
+//                    System.out.printf(name + " " + id + " " + password + " " + couponMap + " ");
                     UserMain usermain = new UserMain(user);
                     exitOuterLoop = true;
                     break;

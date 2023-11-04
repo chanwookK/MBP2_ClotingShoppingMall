@@ -285,8 +285,10 @@ public class UserMain {
                 couponType = "5000"; //1차 요구사항 분석 관련
 
                 //잘못된 입력일 경우
-                Pattern pattern = Pattern.compile("[1-9][0-9]*");
-                Pattern pattern2 = Pattern.compile("0+");
+//                Pattern pattern = Pattern.compile("[1-9][0-9]*");
+//                Pattern pattern2 = Pattern.compile("0+");
+                Pattern pattern = Pattern.compile("^\\d+$|^\\d+(\\s\\d+)*$");
+                Pattern pattern2 = Pattern.compile("[1-9][0-9]*");
                 Matcher matcher = pattern.matcher(scouponN);
                 Matcher matcher2 = pattern2.matcher(scouponN);
 
@@ -295,15 +297,16 @@ public class UserMain {
                     }
                     else {
                         System.out.println("!오류: 잘못된 입력입니다. 다시 입력해주세요.");
-                        in.nextLine();
+                        System.out.print("AShoppingMall > ");
                         continue;
                     }
                 }
-
-                couponN = Integer.parseInt(scouponN);
+                String trimmedInput = scouponN.replaceAll("\\s", "");
+                couponN = Integer.parseInt(trimmedInput);
                 //보유한 할인 쿠폰 수량보다 더 큰 숫자를 입력한 경우
                 if (user.getCoupon().get(couponType) < couponN) {
                     System.out.println(user.getName() + "회원님의 현재 쿠폰 보유량은 " + user.getCoupon().get(couponType) + "입니다. 다시 입력해주세요");
+                    System.out.print("AShoppingMall > ");
                     continue;
                 }
                 //쿠폰 n장으로 구매 가능한 상품인데, n 초과 숫자를 입력하는 경우
@@ -313,6 +316,7 @@ public class UserMain {
 
                 if (outOfPrice < -Integer.parseInt(couponType)) {
                     System.out.println("해당 상품 구매 시 최대 사용 가능한 쿠폰은 " + maxUseCouponNum + "장입니다. 다시 입력해주세요.");
+                    System.out.print("AShoppingMall > ");
                     continue;
                 }
 
@@ -325,18 +329,19 @@ public class UserMain {
             //유저객체의 쿠폰 감소
             user.getCoupon().put(couponType, user.getCoupon().get(couponType) - couponN);
 
+            System.out.println();
             System.out.println("지불할 금액은 " + price + "원 입니다.");
 
 
             System.out.println(parts[0] + "." + parts[1] + " 구매가 완료되었습니다. 감사합니다.");
+            System.out.println();
 
             System.out.println(user.getName() + "회원님의 현재 쿠폰 보유량입니다.");
             for (String couponNum : user.getCoupon().keySet()) {
 
                 System.out.println(couponNum + "원 할인 쿠폰 " + user.getCoupon().get(couponNum) + "장");
-                System.out.println(parts[0] + "." + parts[1] + "\n  가격: " + price);
             }
-
+//            System.out.println(parts[0] + "." + parts[1] + "\n  가격: " + price);
             String[] amount = userInfo.get(2).split("/");
 
             userAmount = Integer.parseInt(amount[0]) + price;
@@ -450,7 +455,8 @@ public class UserMain {
             String formattedDate = currentDate.format(formatter);
 
             // 결과 출력
-            System.out.println("현재 날짜: " + formattedDate);
+//            System.out.println("현재 날짜: " + formattedDate);
+            System.out.println();
 
             //마지막 행에 추가
             stringBuilder.append(parts[0]+"/"+parts[1]+"/"+price+"/"+ formattedDate).append("\n");
