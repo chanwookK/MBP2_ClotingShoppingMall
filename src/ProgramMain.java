@@ -137,7 +137,7 @@ public class ProgramMain {
 
 
         System.out.println("\n회원가입이 완료되었습니다.\n");
-        showProgramMain();
+        return;
 
     }
 
