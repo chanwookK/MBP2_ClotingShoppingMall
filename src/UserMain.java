@@ -587,7 +587,7 @@ public class UserMain {
                     System.out.print("AShoppingMall > ");
                     in.nextLine(); // 엔터 대기
                     System.out.println();
-                    userMainLoop();
+                    return;
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -609,7 +609,7 @@ public class UserMain {
                     System.out.print("AShoppingMall > ");
                     in.nextLine(); //엔터 대기
                     System.out.println();
-                    userMainLoop();
+                   return;
                 } else {
                     System.out.println();
                     System.out.println(user.getName()+"회원님의 현재 쿠폰 보유량입니다.");
@@ -621,11 +621,11 @@ public class UserMain {
                     System.out.print("AShoppingMall > ");
                     in.nextLine(); // 엔터 대기
                     System.out.println();
-                    userMainLoop();
+                    return;
                 }
             } else if (selNum == 3) {
                 System.out.println();
-                userMainLoop();
+                return;
             } else {
                 System.out.println("!오류 : 메뉴번호를 잘못 입력했습니다. 다시 입력해주세요.");
                 startted = false;
