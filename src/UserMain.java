@@ -55,6 +55,9 @@ public class UserMain {
                     showMyPage();
                     break;
                 case 4:
+                    System.out.println();
+                    System.out.println(user.getName()+"회원님, 로그아웃을 완료했습니다.");
+                    System.out.println();
                     return;
                 default:
                     System.out.println("!오류: 잘못된 입력입니다. 다시 입력해주세요.");
@@ -85,6 +88,7 @@ public class UserMain {
             }
             System.out.print("AShoppingMall > ");
             userWantName = in.nextLine();
+            System.out.println();
 
             // 문법 규칙 검사
             Pattern pattern = Pattern.compile("^[가-힣]{1,30}$");
@@ -124,6 +128,7 @@ public class UserMain {
                     // 올바르지 않은 경우: 일치하는 상품 없음 오류 메시지 출력 후 재입력 요청
                     System.out.println("!오류: '" + userWantName + "'와 일치하는 상품이 없습니다. 다시 입력해주세요.");
                     start = false;
+                    productsList = new ArrayList<>();
                     continue;
                 }
 
@@ -131,12 +136,13 @@ public class UserMain {
                 System.out.print("AShoppingMall > ");
                 in.nextLine(); // 엔터 대기
                 System.out.println();
-                userMainLoop();
+                return;
 
             } else {
                 // 올바르지 않은 경우: 문법 규칙 오류 메시지 출력 후 재입력 요청
                 System.out.println("!오류: 상품명 입력 형식이 맞지 않습니다. 다시 입력해주세요.");
                 start = false;
+                productsList = new ArrayList<>();
                 continue; // 재귀 호출을 통해 다시 상품명 검색
             }
         }
