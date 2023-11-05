@@ -117,7 +117,7 @@ public class UserMain {
             }
             if(empty) {
                 // 올바르지 않은 경우: 일치하는 상품 없음 오류 메시지 출력 후 재입력 요청
-                System.out.println("!오류:'" + userWantName + "'와 일치하는 상품이 없습니다. 다시 입력해주세요.");
+                System.out.println("!오류: '" + userWantName + "'와 일치하는 상품이 없습니다. 다시 입력해주세요.");
                 productSearch(); // 재귀 호출을 통해 다시 상품명 검색
             }
 
@@ -129,7 +129,7 @@ public class UserMain {
 
         } else {
             // 올바르지 않은 경우: 문법 규칙 오류 메시지 출력 후 재입력 요청
-            System.out.println("!오류 : 상품명 입력 형식이 맞지 않습니다. 다시 입력해주세요.");
+            System.out.println("!오류: 상품명 입력 형식이 맞지 않습니다. 다시 입력해주세요.");
             productSearch(); // 재귀 호출을 통해 다시 상품명 검색
         }
     }
@@ -137,6 +137,7 @@ public class UserMain {
 
         boolean i = false;
         String[] parts = new String[4];
+        boolean useCoupon = false;
 
         int productNum;
         int targetLineNumber; // 수정하고자 하는 라인 번호
@@ -243,10 +244,12 @@ public class UserMain {
 
         //쿠폰 없는 주문처리
         if(!i){
+            System.out.println();
             System.out.println(parts[0]+"."+parts[1]+" 구매가 완료되었습니다. 감사합니다.");
             String[] amount = userInfo.get(2).split("/");
             userAmount = Integer.parseInt(amount[0]) + Integer.parseInt(parts[2]);
             userAmount2 = Integer.parseInt(amount[1]) + Integer.parseInt(parts[2]);
+
 
             if(userAmount2 >= 100000){
                 addCoupon = userAmount2 / 100000;
@@ -257,10 +260,12 @@ public class UserMain {
             }
         }
         else {
+            useCoupon = true;
             //쿠폰이 적용된 주문처리
             int couponN;
             //쿠폰 종류
             String couponType;
+            System.out.println();
             System.out.println(user.getName() + "회원님의 현재 쿠폰 보유량입니다.");
             for (String couponNum : user.getCoupon().keySet()) {
 
@@ -274,13 +279,12 @@ public class UserMain {
 //            System.out.print("AShoppingMall > ");
 //            couponType = in.next(); //확장성 대비
 
-            System.out.println("사용할 쿠폰의 수를 입력해주세요.(쿠폰 사용을 원하지 않을 시 '0'입력)");
+            System.out.println("사용할 쿠폰의 수를 입력해주세요. (쿠폰 사용을 원하지 않을 시 '0'입력)");
             System.out.print("AShoppingMall > ");
 
             //비정상결과 판단
             while (true) {
-
-                String scouponN  = in.nextLine();
+                String scouponN = in.nextLine();
                 //사용할 쿠폰 갯수 입력 받기
                 couponType = "5000"; //1차 요구사항 분석 관련
 
@@ -292,7 +296,8 @@ public class UserMain {
                 Matcher matcher = pattern.matcher(scouponN);
                 Matcher matcher2 = pattern2.matcher(scouponN);
 
-                if(!matcher.matches()) {
+
+                if(matcher.matches()) {
                     if(matcher2.matches()){
                     }
                     else {
@@ -301,11 +306,19 @@ public class UserMain {
                         continue;
                     }
                 }
-                String trimmedInput = scouponN.replaceAll("\\s", "");
-                couponN = Integer.parseInt(trimmedInput);
+
+                try {
+                    String trimmedInput = scouponN.replaceAll("\\s", "");
+                    couponN = Integer.parseInt(trimmedInput);
+                } catch (NumberFormatException e) {
+                    System.out.println("!오류: 잘못된 입력입니다. 다시 입력해주세요.");
+                    System.out.print("AShoppingMall > ");
+                    continue;
+                }
+
                 //보유한 할인 쿠폰 수량보다 더 큰 숫자를 입력한 경우
                 if (user.getCoupon().get(couponType) < couponN) {
-                    System.out.println(user.getName() + "회원님의 현재 쿠폰 보유량은 " + user.getCoupon().get(couponType) + "입니다. 다시 입력해주세요");
+                    System.out.println(user.getName() + "회원님의 현재 쿠폰 보유량은 " + user.getCoupon().get(couponType) + "장입니다. 다시 입력해주세요");
                     System.out.print("AShoppingMall > ");
                     continue;
                 }
@@ -313,6 +326,7 @@ public class UserMain {
                 int outOfPrice = 0;
                 outOfPrice = Integer.parseInt(parts[2]) - (Integer.parseInt(couponType) * couponN);
                 int maxUseCouponNum = Integer.parseInt(parts[2]) / Integer.parseInt(couponType);
+                maxUseCouponNum +=1;
 
                 if (outOfPrice < -Integer.parseInt(couponType)) {
                     System.out.println("해당 상품 구매 시 최대 사용 가능한 쿠폰은 " + maxUseCouponNum + "장입니다. 다시 입력해주세요.");
@@ -325,6 +339,9 @@ public class UserMain {
 
             int discountPrice = Integer.parseInt(couponType) * couponN;
             price = Integer.parseInt(parts[2]) - discountPrice;
+            if(price < 0) {
+                price = 0;
+            }
 
             //유저객체의 쿠폰 감소
             user.getCoupon().put(couponType, user.getCoupon().get(couponType) - couponN);
@@ -353,8 +370,13 @@ public class UserMain {
             } else {
                 addCoupon = 0;
             }
-
         }
+
+        Map<String, Integer> couponMap = new HashMap<>();
+        couponMap = user.getCoupon();
+        int originalCount = user.getCoupon().get("5000");
+        originalCount += addCoupon;
+        couponMap.put("5000",originalCount);
 
 
         //productlist 수정
@@ -416,12 +438,15 @@ public class UserMain {
 
                     if (parts2.length >= 0) {
                         //총 주문 금액 증가
-                        int newValue = Integer.parseInt(parts2[0]) + userAmount;
+                        int newValue = Integer.parseInt(parts2[0]) + price;
                         parts2[0] = String.valueOf(newValue);
                     }
                     if (parts2.length >= 1) {
                         //10만원 이하 주문 금액 변경
-                        int newValue = Integer.parseInt(parts2[1]) + userAmount2;
+                        int newValue = Integer.parseInt(parts2[1]) + price;
+                        if(newValue >=100000) {
+                            newValue -= 100000;
+                        }
                         parts2[1] = String.valueOf(newValue);
                     }
 
@@ -431,10 +456,13 @@ public class UserMain {
                 } else if (lineNumber == 4) {
                     String[] parts2 = line.split("/");
 
-                    if (parts2.length >= 1) {
+                    if ((!useCoupon) &&parts2.length >= 1) {
                         //총 쿠폰 수 변경
                         int newValue = Integer.parseInt(parts2[1]) + addCoupon;
                         parts2[1] = String.valueOf(newValue);
+                    } else if(useCoupon) {
+                        int minusValue = user.getCoupon().get("5000");
+                        parts2[1] = String.valueOf(minusValue);
                     }
 
                     // 수정된 라인을 StringBuilder에 추가
@@ -478,14 +506,18 @@ public class UserMain {
     public void showMyPage() throws IOException {
         int selNum;
         String[] parts;
+        boolean startted = true;
 
 
         while (true) {
-            System.out.println();
-            System.out.println("[마이페이지] 원하는 메뉴를 선택하세요.");
-            System.out.println("1. 주문 내역 확인");
-            System.out.println("2. 할인 쿠폰 보유량 확인");
-            System.out.println("3. 뒤로가기");
+            if(startted) {
+                System.out.println();
+                System.out.println("[마이페이지] 원하는 메뉴를 선택하세요.");
+                System.out.println("1. 주문 내역 확인");
+                System.out.println("2. 할인 쿠폰 보유량 확인");
+                System.out.println("3. 뒤로가기");
+            }
+            startted = true;
             System.out.print("AShoppingMall > ");
             try {
                 selNum = in.nextInt();
@@ -493,6 +525,7 @@ public class UserMain {
             } catch(InputMismatchException e) {
                 System.out.println("!오류: 잘못된 입력입니다. 다시 입력해주세요.");
                 in.nextLine();
+                startted = false;
                 continue;
             }
 
@@ -565,9 +598,11 @@ public class UserMain {
                     in.nextLine(); // 엔터 대기
                 }
             } else if (selNum == 3) {
+                System.out.println();
                return;
             } else {
                 System.out.println("!오류 : 메뉴번호를 잘못 입력했습니다. 다시 입력해주세요.");
+                startted = false;
             }
         }
 

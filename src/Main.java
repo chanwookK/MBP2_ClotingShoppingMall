@@ -23,7 +23,7 @@ public class Main {
 //        UserMain userMain = new UserMain(user);
 
         //Program test용
-        ProgramMain main = new ProgramMain();
+        //ProgramMain main = new ProgramMain();
 
     }
 }
