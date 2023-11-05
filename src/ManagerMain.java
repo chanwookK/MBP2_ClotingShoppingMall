@@ -124,9 +124,9 @@ public class ManagerMain {
 
 
         //상품번호 예외처리
+        System.out.println("원하시는 상품의 번호를 입력해주세요");
         while(true){
             try{
-                System.out.println("원하시는 상품의 번호를 입력해주세요");
                 System.out.print("AShoppingMall > ");
 
                 String num_input = scanner.nextLine(); // 공백 없이 입력 받음
@@ -137,13 +137,13 @@ public class ManagerMain {
                         pNum=Integer.parseInt(num_input);
                         if(pNum>0 && pNum<=lines.size()) break;
                         else{ //상품번호가 존재하는 범위를 벗어나는 경우
-                            System.out.println("!오류 : 존재하지 않는 상품 번호입니다.\n");
+                            System.out.println("번호를 다시 입력해주세요.");
                         }
                     }else if(num_input.startsWith("0")){ //0선행
-                        System.out.println("!오류 : 존재하지 않는 상품 번호입니다.\n");
+                        System.out.println("번호를 다시 입력해주세요.");
                     }
                 }else{ //공백이 포함된 문법오류
-                    System.out.println("!오류 : 문법 규칙에 맞는 입력이 아닙니다.\n");
+                    System.out.println("번호를 다시 입력해주세요.");
                 }
 
             }catch(Exception e) {
