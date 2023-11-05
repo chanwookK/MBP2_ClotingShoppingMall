@@ -119,7 +119,7 @@ public class ManagerMain {
                 lines.add(line);
             }
         }catch(IOException e){
-            System.out.println("예외 발생: "+e.getMessage()+"\n");
+            System.out.println("예외 발생 : "+e.getMessage()+"\n");
         }
 
 
