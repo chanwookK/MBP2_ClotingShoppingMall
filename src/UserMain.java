@@ -123,7 +123,8 @@ public class UserMain {
                 if(empty) {
                     // 올바르지 않은 경우: 일치하는 상품 없음 오류 메시지 출력 후 재입력 요청
                     System.out.println("!오류: '" + userWantName + "'와 일치하는 상품이 없습니다. 다시 입력해주세요.");
-                    productSearch(); // 재귀 호출을 통해 다시 상품명 검색
+                    start = false;
+                    continue;
                 }
 
                 System.out.println("메인 메뉴로 돌아가려면 엔터 키를 누르세요.");
