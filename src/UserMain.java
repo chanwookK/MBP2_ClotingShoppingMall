@@ -258,6 +258,11 @@ public class UserMain {
             else{
                 addCoupon = 0;
             }
+            Map<String, Integer> couponMap = new HashMap<>();
+            couponMap = user.getCoupon();
+            int originalCount = user.getCoupon().get("5000");
+            originalCount += addCoupon;
+            couponMap.put("5000",originalCount);
         }
         else {
             useCoupon = true;
@@ -353,11 +358,7 @@ public class UserMain {
             System.out.println(parts[0] + "." + parts[1] + " 구매가 완료되었습니다. 감사합니다.");
             System.out.println();
 
-            System.out.println(user.getName() + "회원님의 현재 쿠폰 보유량입니다.");
-            for (String couponNum : user.getCoupon().keySet()) {
 
-                System.out.println(couponNum + "원 할인 쿠폰 " + user.getCoupon().get(couponNum) + "장");
-            }
 //            System.out.println(parts[0] + "." + parts[1] + "\n  가격: " + price);
             String[] amount = userInfo.get(2).split("/");
 
@@ -370,13 +371,22 @@ public class UserMain {
             } else {
                 addCoupon = 0;
             }
+
+            Map<String, Integer> couponMap = new HashMap<>();
+            couponMap = user.getCoupon();
+            int originalCount = user.getCoupon().get("5000");
+            originalCount += addCoupon;
+            couponMap.put("5000",originalCount);
+
+            System.out.println(user.getName() + "회원님의 현재 쿠폰 보유량입니다.");
+            for (String couponNum : user.getCoupon().keySet()) {
+
+                System.out.println(couponNum + "원 할인 쿠폰 " + user.getCoupon().get(couponNum) + "장");
+            }
+
         }
 
-        Map<String, Integer> couponMap = new HashMap<>();
-        couponMap = user.getCoupon();
-        int originalCount = user.getCoupon().get("5000");
-        originalCount += addCoupon;
-        couponMap.put("5000",originalCount);
+
 
 
         //productlist 수정
@@ -445,7 +455,7 @@ public class UserMain {
                         //10만원 이하 주문 금액 변경
                         int newValue = Integer.parseInt(parts2[1]) + price;
                         if(newValue >=100000) {
-                            newValue -= 100000;
+                            newValue %= 100000;
                         }
                         parts2[1] = String.valueOf(newValue);
                     }
@@ -455,15 +465,21 @@ public class UserMain {
 
                 } else if (lineNumber == 4) {
                     String[] parts2 = line.split("/");
+                    int couponValue = user.getCoupon().get("5000");
 
-                    if ((!useCoupon) &&parts2.length >= 1) {
-                        //총 쿠폰 수 변경
-                        int newValue = Integer.parseInt(parts2[1]) + addCoupon;
+                    if(parts2.length >=1) {
+                        int newValue = couponValue;
                         parts2[1] = String.valueOf(newValue);
-                    } else if(useCoupon) {
-                        int minusValue = user.getCoupon().get("5000");
-                        parts2[1] = String.valueOf(minusValue);
                     }
+
+//                    if ((!useCoupon) &&parts2.length >= 1) {
+//                        //총 쿠폰 수 변경
+//                        int newValue = Integer.parseInt(parts2[1]) + addCoupon;
+//                        parts2[1] = String.valueOf(newValue);
+//                    } else if(useCoupon) {
+//                        int minusValue = user.getCoupon().get("5000");
+//                        parts2[1] = String.valueOf(minusValue);
+//                    }
 
                     // 수정된 라인을 StringBuilder에 추가
                     stringBuilder.append(String.join("/", parts2)).append("\n");
