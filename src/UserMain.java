@@ -163,7 +163,7 @@ public class UserMain {
                 try {
                     productNum = Integer.parseInt(inputString);
                 }catch (NumberFormatException e){
-                    System.out.println("!오류: 존재하지 않는 상품 번호입니다.");
+                    System.out.println("!오류 : 존재하지 않는 상품 번호입니다.");
                     continue;
                 }
                 String filePath = "src/productlist.txt";
@@ -199,13 +199,13 @@ public class UserMain {
 
             } else {
                 //오류 발생(문법규칙 규합 X)
-                System.out.println("!오류: 잘못된 입력입니다. 다시 입력해주세요.");
+                System.out.println("!오류 : 잘못된 입력입니다. 다시 입력해주세요.");
                 continue;
             }
 
             if (!i) {
                 //오류 발생(해당 상품번호 없음)
-                System.out.println("!오류: 존재하지 않는 상품 번호입니다.");
+                System.out.println("!오류 : 존재하지 않는 상품 번호입니다.");
                 continue;
             }
             break;
@@ -304,7 +304,7 @@ public class UserMain {
                     if(matcher2.matches()){
                     }
                     else {
-                        System.out.println("!오류: 잘못된 입력입니다. 다시 입력해주세요.");
+                        System.out.println("!오류 : 잘못된 입력입니다. 다시 입력해주세요.");
                         System.out.print("AShoppingMall > ");
                         continue;
                     }
@@ -314,7 +314,7 @@ public class UserMain {
                     String trimmedInput = scouponN.replaceAll("\\s", "");
                     couponN = Integer.parseInt(trimmedInput);
                 } catch (NumberFormatException e) {
-                    System.out.println("!오류: 잘못된 입력입니다. 다시 입력해주세요.");
+                    System.out.println("!오류 : 잘못된 입력입니다. 다시 입력해주세요.");
                     System.out.print("AShoppingMall > ");
                     continue;
                 }
@@ -527,7 +527,7 @@ public class UserMain {
                 selNum = in.nextInt();
                 in.nextLine();
             } catch(InputMismatchException e) {
-                System.out.println("!오류: 잘못된 입력입니다. 다시 입력해주세요.");
+                System.out.println("!오류 : 잘못된 입력입니다. 다시 입력해주세요.");
                 in.nextLine();
                 startted = false;
                 continue;
