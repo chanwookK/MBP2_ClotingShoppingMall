@@ -586,6 +586,7 @@ public class UserMain {
                     System.out.println("메인 메뉴로 돌아가려면 엔터 키를 누르세요.");
                     System.out.print("AShoppingMall > ");
                     in.nextLine(); // 엔터 대기
+                    System.out.println();
                     userMainLoop();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -607,6 +608,8 @@ public class UserMain {
                     System.out.println("메인 메뉴로 돌아가려면 엔터 키를 누르세요.");
                     System.out.print("AShoppingMall > ");
                     in.nextLine(); //엔터 대기
+                    System.out.println();
+                    userMainLoop();
                 } else {
                     System.out.println();
                     System.out.println(user.getName()+"회원님의 현재 쿠폰 보유량입니다.");
@@ -617,6 +620,8 @@ public class UserMain {
                     System.out.println("메인 메뉴로 돌아가려면 엔터 키를 누르세요.");
                     System.out.print("AShoppingMall > ");
                     in.nextLine(); // 엔터 대기
+                    System.out.println();
+                    userMainLoop();
                 }
             } else if (selNum == 3) {
                 System.out.println();
