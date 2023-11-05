@@ -293,9 +293,7 @@ public class UserMain {
                 //사용할 쿠폰 갯수 입력 받기
                 couponType = "5000"; //1차 요구사항 분석 관련
 
-                //잘못된 입력일 경우
-//                Pattern pattern = Pattern.compile("[1-9][0-9]*");
-//                Pattern pattern2 = Pattern.compile("0+");
+
                 Pattern pattern = Pattern.compile("^\\d+$|^\\d+(\\s\\d+)*$");
                 Pattern pattern2 = Pattern.compile("[0-9][0-9]*");
                 Matcher matcher = pattern.matcher(scouponN);
@@ -359,7 +357,6 @@ public class UserMain {
             System.out.println();
 
 
-//            System.out.println(parts[0] + "." + parts[1] + "\n  가격: " + price);
             String[] amount = userInfo.get(2).split("/");
 
             userAmount = Integer.parseInt(amount[0]) + price;
@@ -471,15 +468,6 @@ public class UserMain {
                         int newValue = couponValue;
                         parts2[1] = String.valueOf(newValue);
                     }
-
-//                    if ((!useCoupon) &&parts2.length >= 1) {
-//                        //총 쿠폰 수 변경
-//                        int newValue = Integer.parseInt(parts2[1]) + addCoupon;
-//                        parts2[1] = String.valueOf(newValue);
-//                    } else if(useCoupon) {
-//                        int minusValue = user.getCoupon().get("5000");
-//                        parts2[1] = String.valueOf(minusValue);
-//                    }
 
                     // 수정된 라인을 StringBuilder에 추가
                     stringBuilder.append(String.join("/", parts2)).append("\n");
