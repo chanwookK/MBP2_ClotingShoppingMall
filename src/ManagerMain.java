@@ -137,10 +137,10 @@ public class ManagerMain {
                         pNum=Integer.parseInt(num_input);
                         if(pNum>0 && pNum<=lines.size()) break;
                         else{ //상품번호가 존재하는 범위를 벗어나는 경우
-                            System.out.println("!오류 : 입력하신 상품번호에 해당하는 상품이 없습니다.\n");
+                            System.out.println("!오류 : 존재하지 않는 상품 번호입니다.\n");
                         }
                     }else if(num_input.startsWith("0")){ //0선행
-                        System.out.println("!오류 : 입력하신 상품번호에 해당하는 상품이 없습니다.\n");
+                        System.out.println("!오류 : 존재하지 않는 상품 번호입니다.\n");
                     }
                 }else{ //공백이 포함된 문법오류
                     System.out.println("!오류 : 문법 규칙에 맞는 입력이 아닙니다.\n");
