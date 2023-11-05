@@ -68,70 +68,79 @@ public class UserMain {
 
     public void productSearch() throws IOException{
         String userWantName;
+        boolean start = true;
 
 
         ArrayList<ArrayList<String>> productsList = new ArrayList<>();
         String parts[];
         boolean empty = true;
 
-        // 사용자로부터 상품명 입력 받기
-        System.out.println();
-        System.out.println("[상품 검색]");
-        System.out.println("검색할 상품명을 입력해주세요:");
-        System.out.print("AShoppingMall > ");
-        userWantName = in.nextLine();
 
-        // 문법 규칙 검사
-        Pattern pattern = Pattern.compile("^[가-힣]{1,30}$");
-        Matcher matcher = pattern.matcher(userWantName);
-
-        if (matcher.matches()) {
-            // 의미 규칙 검사
-            String filePath = "src/productlist.txt";
-
-            try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    parts = line.split("/");
-                    ArrayList<String> product1 = new ArrayList<>();
-                    product1.add(parts[1]); // Product Name
-                    product1.add(parts[2]); // Product Price
-                    productsList.add(product1);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
+        while(true) {
+            if(start) {
+                // 사용자로부터 상품명 입력 받기
+                System.out.println();
+                System.out.println("[상품 검색]");
+                System.out.println("검색할 상품명을 입력해주세요:");
             }
-
-            for (ArrayList<String> product : productsList) {
-                int i=1;
-                String productName = product.get(0); // 상품명
-                String productPrice = product.get(1); // 상품가격
-
-                // 사용자가 원하는 상품명과 일치하는 경우 출력
-                if (productName.contains(userWantName)) {
-                    empty = false;
-                    System.out.println( i + ". " + productName + "\n  " + "가격: " +productPrice);
-                    System.out.println();
-                    i++;
-                }
-            }
-            if(empty) {
-                // 올바르지 않은 경우: 일치하는 상품 없음 오류 메시지 출력 후 재입력 요청
-                System.out.println("!오류: '" + userWantName + "'와 일치하는 상품이 없습니다. 다시 입력해주세요.");
-                productSearch(); // 재귀 호출을 통해 다시 상품명 검색
-            }
-
-            System.out.println("메인 메뉴로 돌아가려면 엔터 키를 누르세요.");
             System.out.print("AShoppingMall > ");
-            in.nextLine(); // 엔터 대기
-            System.out.println();
-            userMainLoop();
+            userWantName = in.nextLine();
 
-        } else {
-            // 올바르지 않은 경우: 문법 규칙 오류 메시지 출력 후 재입력 요청
-            System.out.println("!오류: 상품명 입력 형식이 맞지 않습니다. 다시 입력해주세요.");
-            productSearch(); // 재귀 호출을 통해 다시 상품명 검색
+            // 문법 규칙 검사
+            Pattern pattern = Pattern.compile("^[가-힣]{1,30}$");
+            Matcher matcher = pattern.matcher(userWantName);
+
+            if (matcher.matches()) {
+                // 의미 규칙 검사
+                String filePath = "src/productlist.txt";
+
+                try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        parts = line.split("/");
+                        ArrayList<String> product1 = new ArrayList<>();
+                        product1.add(parts[1]); // Product Name
+                        product1.add(parts[2]); // Product Price
+                        productsList.add(product1);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                for (ArrayList<String> product : productsList) {
+                    int i=1;
+                    String productName = product.get(0); // 상품명
+                    String productPrice = product.get(1); // 상품가격
+
+                    // 사용자가 원하는 상품명과 일치하는 경우 출력
+                    if (productName.contains(userWantName)) {
+                        empty = false;
+                        System.out.println( i + ". " + productName + "\n  " + "가격: " +productPrice);
+                        System.out.println();
+                        i++;
+                    }
+                }
+                if(empty) {
+                    // 올바르지 않은 경우: 일치하는 상품 없음 오류 메시지 출력 후 재입력 요청
+                    System.out.println("!오류: '" + userWantName + "'와 일치하는 상품이 없습니다. 다시 입력해주세요.");
+                    productSearch(); // 재귀 호출을 통해 다시 상품명 검색
+                }
+
+                System.out.println("메인 메뉴로 돌아가려면 엔터 키를 누르세요.");
+                System.out.print("AShoppingMall > ");
+                in.nextLine(); // 엔터 대기
+                System.out.println();
+                userMainLoop();
+
+            } else {
+                // 올바르지 않은 경우: 문법 규칙 오류 메시지 출력 후 재입력 요청
+                System.out.println("!오류: 상품명 입력 형식이 맞지 않습니다. 다시 입력해주세요.");
+                start = false;
+                continue; // 재귀 호출을 통해 다시 상품명 검색
+            }
         }
+
+
     }
     public void productOrder() throws IOException {
 
@@ -143,10 +152,13 @@ public class UserMain {
         int targetLineNumber; // 수정하고자 하는 라인 번호
         int j = 0;
         String inputString;
+        boolean orderStart = true;
 
         while(true) {
             //상품번호 입력
-            System.out.println("[주문]\n상품 번호를 입력해주세요.");
+            if(orderStart) {
+                System.out.println("[주문]\n상품 번호를 입력해주세요.");
+            }
             System.out.print("AShoppingMall > ");
 
             inputString = in.nextLine();
@@ -164,6 +176,7 @@ public class UserMain {
                     productNum = Integer.parseInt(inputString);
                 }catch (NumberFormatException e){
                     System.out.println("!오류 : 존재하지 않는 상품 번호입니다.");
+                    orderStart = false;
                     continue;
                 }
                 String filePath = "src/productlist.txt";
@@ -200,12 +213,14 @@ public class UserMain {
             } else {
                 //오류 발생(문법규칙 규합 X)
                 System.out.println("!오류 : 잘못된 입력입니다. 다시 입력해주세요.");
+                orderStart = false;
                 continue;
             }
 
             if (!i) {
                 //오류 발생(해당 상품번호 없음)
                 System.out.println("!오류 : 존재하지 않는 상품 번호입니다.");
+                orderStart = false;
                 continue;
             }
             break;
@@ -245,7 +260,7 @@ public class UserMain {
         //쿠폰 없는 주문처리
         if(!i){
             System.out.println();
-            System.out.println(parts[0]+"."+parts[1]+" 구매가 완료되었습니다. 감사합니다.");
+            System.out.println(parts[0]+". "+parts[1]+" 구매가 완료되었습니다. 감사합니다.");
             String[] amount = userInfo.get(2).split("/");
             userAmount = Integer.parseInt(amount[0]) + Integer.parseInt(parts[2]);
             userAmount2 = Integer.parseInt(amount[1]) + Integer.parseInt(parts[2]);
@@ -570,6 +585,7 @@ public class UserMain {
                     System.out.println("메인 메뉴로 돌아가려면 엔터 키를 누르세요.");
                     System.out.print("AShoppingMall > ");
                     in.nextLine(); // 엔터 대기
+                    userMainLoop();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -603,7 +619,7 @@ public class UserMain {
                 }
             } else if (selNum == 3) {
                 System.out.println();
-               return;
+                userMainLoop();
             } else {
                 System.out.println("!오류 : 메뉴번호를 잘못 입력했습니다. 다시 입력해주세요.");
                 startted = false;
