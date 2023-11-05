@@ -292,7 +292,7 @@ public class UserMain {
 //                Pattern pattern = Pattern.compile("[1-9][0-9]*");
 //                Pattern pattern2 = Pattern.compile("0+");
                 Pattern pattern = Pattern.compile("^\\d+$|^\\d+(\\s\\d+)*$");
-                Pattern pattern2 = Pattern.compile("[1-9][0-9]*");
+                Pattern pattern2 = Pattern.compile("[0-9][0-9]*");
                 Matcher matcher = pattern.matcher(scouponN);
                 Matcher matcher2 = pattern2.matcher(scouponN);
 
