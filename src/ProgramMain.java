@@ -8,10 +8,6 @@ import java.lang.Integer;
 
 public class ProgramMain {
 
-    final String managerName = "관리자";
-    final String managerId = "adminadminadmin";
-    final String managerPassword = "password00";
-
     public ProgramMain() {
         showProgramMain();
     }
@@ -147,9 +143,9 @@ public class ProgramMain {
 
     public void logIn() throws IOException {
 
-        /*final String managerName = "관리자";
+        final String managerName = "관리자";
         final String managerId = "adminadminadmin";
-        final String managerPassword = "password00";*/
+        final String managerPassword = "password00";
 
         String name;
         String id;

@@ -49,7 +49,7 @@ public class ManagerMain {
                 checkProduct();
             }
             else if(selNum==2){
-                System.out.println("\n관리자님, 로그아웃을 완료했습니다.");
+                System.out.println("\n관리자님, 로그아웃을 완료했습니다.\n");
                 break;
             }
         }
