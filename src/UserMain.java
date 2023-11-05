@@ -153,7 +153,7 @@ public class UserMain {
 
 
             //상품번호 문법규칙에 부합하는지 체크
-            Pattern pattern = Pattern.compile("[1-9][0-9]*");
+            Pattern pattern = Pattern.compile("[0-9][0-9]*");
             Matcher matcher = pattern.matcher(inputString);
 
             //문법규칙에 부합한다면
