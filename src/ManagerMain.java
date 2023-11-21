@@ -129,7 +129,7 @@ public class ManagerMain {
             try{
                 System.out.print("AShoppingMall > ");
 
-                String num_input = scanner.nextLine(); // 공백 없이 입력 받음
+                String num_input = scanner.nextLine().trim(); // 앞뒤 공백은 허용!
                 //입력에 공백이 포함되지 않고 길이가 1이상인지 확인
                 if(!num_input.contains(" ")&& num_input.length()>=1){
                     //입력이 0을 포함 안하는 경우
