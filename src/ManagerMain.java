@@ -24,8 +24,9 @@ public class ManagerMain {
         Scanner scanner = new Scanner(System.in);
         while(true){
             System.out.println("[관리자 메뉴] 실행할 메뉴를 선택해주세요");
-            System.out.println("1. 재고 확인 및 수량 변경");
-            System.out.println("2. 로그아웃");
+            System.out.println("1. 재고 확인 및 수량/가격 변경");
+            System.out.println("2. 상품 추가 및 삭제");
+            System.out.println("3. 로그아웃");
 
             while(true){
                 try{
@@ -34,7 +35,7 @@ public class ManagerMain {
                     String input=scanner.nextLine().trim();
                     if(input.matches("[1-9][0-9]*")&&input.length()>=1){
                         selNum=Integer.parseInt(input);
-                        if(selNum!=1 && selNum!=2){ //1이나 2를 입력하지 않은 경우. 비정상 입력
+                        if(selNum!=1 && selNum!=2 &&selNum!=3){ //1이나 2를 입력하지 않은 경우. 비정상 입력
                             System.out.println("!오류: 잘못된 입력입니다. 다시 입력해주세요.");
                         }else break;
                     }else {
@@ -47,13 +48,14 @@ public class ManagerMain {
 
             if(selNum==1){
                 checkProduct();
-            }
-            else if(selNum==2){
+            }else if(selNum==2){
+                //manageProduct();
+                System.out.println("구현예정!!");
+            }else if(selNum==3){
                 System.out.println("\n관리자님, 로그아웃을 완료했습니다.\n");
                 break;
             }
         }
-        //scanner.close();
     }
 
     //전체 상품 데이터 체크하는 함수
@@ -103,11 +105,13 @@ public class ManagerMain {
     }
 
 
-    //상품 수량 변경하는 함수
+    //상품 수량/가격 변경하는 함수
     public void modifyProduct(){
         int pNum=0;
         String pName="";
         int pAmount=-1;
+        int pPrice=-1;
+        int selNum;
 
         scanner = new Scanner(System.in);
 
@@ -124,6 +128,8 @@ public class ManagerMain {
 
 
         //상품번호 예외처리
+        int checkIndex=0; //수정할 배열 번호
+        String targetLine = ""; // pNum과 일치하는 행을 담을 변수
         System.out.println("원하시는 상품의 번호를 입력해주세요");
         while(true){
             try{
@@ -135,8 +141,20 @@ public class ManagerMain {
                     //입력이 0을 포함 안하는 경우
                     if(num_input.matches("[1-9][0-9]*")){
                         pNum=Integer.parseInt(num_input);
-                        if(pNum>0 && pNum<=lines.size()) break;
-                        else{ //상품번호가 존재하는 범위를 벗어나는 경우
+
+                        for (String line : lines) {
+                            String[] arr = line.split("/");
+                            if (Integer.parseInt(arr[0]) == pNum) { // arr[0]가 pNum과 같은지 확인
+                                targetLine = line; // 일치하는 행을 변수에 저장
+                                break; // 일치하는 행을 찾았으므로 반복문 종료
+                            }
+                        }
+                        // targetLine을 가공하여 필요한 작업 수행
+                        if (!targetLine.isEmpty()) {
+                            checkIndex=lines.indexOf(targetLine);
+                            break;
+                        }
+                        else{ //pNum에 해당하는 행을 찾지 못한 경우에 대한 처리
                             System.out.println("번호를 다시 입력해주세요.");
                         }
                     }else if(num_input.startsWith("0")){ //0선행
@@ -146,48 +164,95 @@ public class ManagerMain {
                     System.out.println("번호를 다시 입력해주세요.");
                 }
 
+
             }catch(Exception e) {
                 System.out.println("예외 발생 : "+e.getMessage()+"\n");
             }
         }
 
 
-        //변경수량 예외처리
+        //수량변경을 할건지, 가격변경을 할건지 정하기
+        System.out.println("수량변경을 원하시면 1, 가격변경을 원하시면 2를 입력해주세요.");
         while(true){
             try{
-                System.out.println("변경하실 수량을 입력해주세요");
                 System.out.print("AShoppingMall > ");
-                String check_amount=scanner.nextLine(); //앞뒤 공백 확인하는
-                String amount_input=check_amount.trim();
 
-                //상품 수량 입력에 앞뒤 공백이 있었던 경우
-                if(check_amount.length()!=amount_input.length()){
-                    System.out.println("!오류 : 문법 규칙에 맞는 입력이 아닙니다.\n");
-                }else if(!amount_input.matches("^[0-9]+$")){
-                    //숫자로만 이루어져있어야하며 중간에 공백이 있으면 안된다.
-                    System.out.println("!오류 : 문법 규칙에 맞는 입력이 아닙니다.\n");
-                }else{
-                    pAmount=Integer.parseInt(amount_input);
-                    if(pAmount>=0){ //0이상의 자연수면서, 공백이 없는 입력
-                        break;
-                    }else{
-                        System.out.println("!오류 : 수량은 0 이상의 숫자여야합니다.\n");
-                    }
+                String input=scanner.nextLine().trim();
+                if(input.matches("[1-9][0-9]*")&&input.length()>=1){
+                    selNum=Integer.parseInt(input);
+                    if(selNum!=1 && selNum!=2){ //1이나 2를 입력하지 않은 경우. 비정상 입력
+                        System.out.println("!오류: 잘못된 입력입니다. 다시 입력해주세요.");
+                    }else break;
+                }else {
+                    System.out.println("!오류: 잘못된 입력입니다. 다시 입력해주세요.");
                 }
-            }catch(Exception e){
-                System.out.println("예외 발생 : "+e.getMessage()+"\n");
+            }catch (NumberFormatException e) {
+                System.out.println("!오류: 잘못된 입력입니다. 다시 입력해주세요.");
             }
         }
 
+        String[] change = targetLine.split("/");
+        if(selNum==1) {
+            //변경수량 예외처리
+            while (true) {
+                try {
+                    System.out.println("변경하실 수량을 입력해주세요");
+                    System.out.print("AShoppingMall > ");
+                    String check_amount = scanner.nextLine(); //앞뒤 공백 확인하는
+                    String amount_input = check_amount.trim();
+
+                    //상품 수량 입력에 앞뒤 공백이 있었던 경우
+                    if (check_amount.length() != amount_input.length()) {
+                        System.out.println("!오류 : 재고수량 입력 형식이 맞지 않습니다. 다시 입력해주세요.");
+                    } else if (!amount_input.matches("^[0-9]+$")) {
+                        //숫자로만 이루어져있어야하며 중간에 공백이 있으면 안된다.
+                        System.out.println("!오류 : 재고수량 입력 형식이 맞지 않습니다. 다시 입력해주세요.");
+                    } else {
+                        pAmount = Integer.parseInt(amount_input);
+                        if (pAmount >= 0) { //0이상의 자연수면서, 공백이 없는 입력
+                            change[3]=String.valueOf(pAmount);
+                            break;
+                        } else {
+                            System.out.println("!오류 : 재고수량 입력 형식이 맞지 않습니다. 다시 입력해주세요.");
+                        }
+                    }
+                } catch (Exception e) {
+                    System.out.println("예외 발생 : " + e.getMessage() + "\n");
+                }
+            }
+        }else if(selNum==2){
+            //가격 예외처리
+            while (true) {
+                try {
+                    System.out.println("변경하실 가격을 입력해주세요");
+                    System.out.print("AShoppingMall > ");
+                    String check_price = scanner.nextLine(); //앞뒤 공백 확인하는
+                    String price_input = check_price.trim();
+
+                    //상품 수량 입력에 앞뒤 공백이 있었던 경우
+                    if (check_price.length() != price_input.length()) {
+                        System.out.println("!오류 : 가격 입력 형식이 맞지 않습니다. 다시 입력해주세요.");
+                    } else if (!price_input.matches("^[0-9]+$")) {
+                        //숫자로만 이루어져있어야하며 중간에 공백이 있으면 안된다.
+                        System.out.println("!오류 : 가격 입력 형식이 맞지 않습니다. 다시 입력해주세요.");
+                    } else {
+                        pPrice = Integer.parseInt(price_input);
+                        if (pPrice >= 1) { //0이상의 자연수면서, 공백이 없는 입력
+                            change[2]=String.valueOf(pPrice);
+                            break;
+                        } else {
+                            System.out.println("!오류 : 가격 입력 형식이 맞지 않습니다. 다시 입력해주세요.");
+                        }
+                    }
+                } catch (Exception e) {
+                    System.out.println("예외 발생 : " + e.getMessage() + "\n");
+                }
+            }
+        }
 
         //데이터 수정
-        //pNum(사용자 입력받은 상품번호)는 1부터 시작하기 때문에 배열 접근시 -1해줌.
-        String[] arr=lines.get(pNum-1).split("/");
-        arr[3]=String.valueOf(pAmount);
-        pName=arr[1];
-        String modify=String.join("/",arr);
-        lines.set(pNum-1,modify);
-
+        String modify=String.join("/",change);
+        lines.set(checkIndex,modify);
 
         //파일에 수정된 데이터 저장
         try(BufferedWriter writer=new BufferedWriter(new FileWriter(filepath))){
@@ -199,9 +264,17 @@ public class ManagerMain {
             System.out.println("예외 발생: "+e.getMessage()+"\n");
         }
 
+        //productlist.txt에 변경된 상품 정보를 반영하고 pName에 상품명 대입
+        pName=change[1];
+
         //수정완료
         System.out.println();
-        System.out.printf("%d. %s 잔여수량이 %d으로 변경되었습니다.\n",pNum,pName,pAmount);
+
+        if(selNum==1){
+            System.out.printf("%d. %s 잔여수량이 %d으로 변경되었습니다.\n",pNum,pName,pAmount);
+        }else if(selNum==2){
+            System.out.printf("%d. %s 가격이 %d으로 변경되었습니다.\n",pNum,pName,pPrice);
+        }
 
 
         //사용자 엔터키 입력 대기
