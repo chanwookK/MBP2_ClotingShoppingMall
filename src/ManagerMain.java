@@ -458,7 +458,6 @@ public class ManagerMain {
 
             //상품번호 예외처리
             int checkIndex=0; //수정할 배열 번호
-            String targetLine = ""; // pNum과 일치하는 행을 담을 변수
             while(true){
                 try{
                     System.out.print("AShoppingMall > ");
@@ -474,16 +473,15 @@ public class ManagerMain {
                                 System.out.println("번호를 다시 입력해주세요.");
                                 continue;
                             }
-                            for (String line : lines) {
-                                String[] arr = line.split("/");
+                            for (int i = 1; i < lines.size(); i++) {
+                                String[] arr = lines.get(i).split("/");
                                 if (Integer.parseInt(arr[0]) == pNum) { // arr[0]가 pNum과 같은지 확인
-                                    targetLine = line; // 일치하는 행을 변수에 저장
+                                    checkIndex=i; // 일치하는 행을 변수에 저장
                                     break; // 일치하는 행을 찾았으므로 반복문 종료
                                 }
                             }
-                            // targetLine을 가공하여 필요한 작업 수행
-                            if (!targetLine.isEmpty()) {
-                                checkIndex=lines.indexOf(targetLine);
+                            // 일치하는 행이 있을때
+                            if (checkIndex>0) {
                                 break;
                             }
                             else{ //pNum에 해당하는 행을 찾지 못한 경우에 대한 처리
@@ -501,9 +499,10 @@ public class ManagerMain {
                     System.out.println("예외 발생 : "+e.getMessage()+"\n");
                 }
             }
+            System.out.printf("checkIndex: %d\n",checkIndex);
 
             //productlist.txt에 변경된 상품 정보를 반영하고 pName에 상품명 대입
-            pName=lines.get(checkIndex).split("/")[1];
+            pName= lines.get(checkIndex).split("/")[1];
 
             //데이터 수정
             lines.remove(checkIndex);
