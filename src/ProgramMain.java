@@ -1,4 +1,5 @@
 import java.io.*;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.DateTimeException;
@@ -89,9 +90,9 @@ public class ProgramMain {
                         System.out.println("\n오늘 날짜 : "+date.substring(0,2)+"년 "+date.substring(2,4)+"월 "+date.substring(4,6)+"일");
                         System.out.println();
 
-                        FileWriter fw = new FileWriter(file,true);
+                        FileWriter fw = new FileWriter(file,false);
                         // 문자열 출력
-                        fw.write("\n"+date);
+                        fw.write(lastDate+"\n"+date);
 
                         fw.close();
                         reader.close(); //BufferedReader 닫기
