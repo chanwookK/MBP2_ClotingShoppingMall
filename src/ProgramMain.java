@@ -253,7 +253,10 @@ public class ProgramMain {
 
                 Map<String, Integer> managerCoupon = new HashMap<>();
                 managerCoupon.put("0", 0);
-                User user = new User(managerName, id, password, managerCoupon);
+                Map<String, List<String>> managerExpiration = new HashMap<>();
+                managerExpiration.put("0", null);
+
+                User user = new User(managerName, id, password, managerCoupon, managerExpiration);
                 System.out.println();
                 ManagerMain managerMain = new ManagerMain(user);
                 break;
@@ -280,6 +283,7 @@ public class ProgramMain {
                     int lineNumber = 2;
 
                     Map<String, Integer> couponMap = new HashMap<>();
+                    Map<String, List<String>> expirationMap = new HashMap<>();
 
                     while ((line = reader.readLine()) != null) {
 
@@ -304,6 +308,22 @@ public class ProgramMain {
                             break;
                         }
 
+                        if (lineNumber == 5) { // expirationMap 가져오기
+                            String[] expirationPairs = line.split(",");
+                            for (String expPairs : expirationPairs) {
+                                String[] expParts = expPairs.split("/");
+                                if (expParts.length == 2) {
+                                    String couponPrice = expParts[0];
+                                    String[] expirationDates = expParts[1].split(",");
+
+                                    List<String> expirationList = new ArrayList<>(Arrays.asList(expirationDates));
+
+                                    expirationMap.put(couponPrice, expirationList);
+                                }
+                            }
+
+                        }
+
                     }
                     // 위에서 입력한 ID에 부합하는 PW가 입력된 경우
                     System.out.println("\n로그인 완료!\n");
@@ -313,7 +333,7 @@ public class ProgramMain {
                     checkDate(); //날짜 입력 받기
 
                     // 등록된 일반 유저의 ID와 PW일경우
-                    User user = new User(name, id, password, couponMap);
+                    User user = new User(name, id, password, couponMap, expirationMap);
 //                    System.out.printf(name + " " + id + " " + password + " " + couponMap + " ");
                     UserMain usermain = new UserMain(user);
                     exitOuterLoop = true;
