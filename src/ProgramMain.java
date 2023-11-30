@@ -89,6 +89,11 @@ public class ProgramMain {
                         System.out.println("\n오늘 날짜 : "+date.substring(0,2)+"년 "+date.substring(2,4)+"월 "+date.substring(4,6)+"일");
                         System.out.println();
 
+                        FileWriter fw = new FileWriter(file,true);
+                        // 문자열 출력
+                        fw.write("\n"+date);
+
+                        fw.close();
                         reader.close(); //BufferedReader 닫기
                         break;
                     }else{
