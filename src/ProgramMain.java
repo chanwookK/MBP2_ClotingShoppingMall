@@ -1,10 +1,16 @@
 import java.io.*;
-import java.util.HashMap;
-import java.util.InputMismatchException;
-import java.util.Map;
-import java.util.Scanner;
+import java.nio.file.Paths;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.DateTimeException;
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.lang.Integer;
+
+import static java.lang.Integer.parseInt;
 
 public class ProgramMain {
 
@@ -54,6 +60,57 @@ public class ProgramMain {
             }
         }
 
+    }
+    void checkDate(){
+
+        Scanner scan = new Scanner(System.in);
+        String date;
+
+        System.out.println("[날짜 입력]\n" + "오늘 날짜를 입력해주세요 (예: 231221)");
+        while (true) {
+            System.out.print("AShoppingMall >");
+            date = scan.nextLine();
+
+            if (date.length() == 6 && date.matches(("\\d+"))) {
+                //유효한 날짜인지 확인
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyMMdd");
+                try {
+                    LocalDate inputDate = LocalDate.parse(date, formatter);
+                    int day = parseInt(date.substring(4,6));
+                    LocalDate validDate = LocalDate.of(inputDate.getYear(), inputDate.getMonthValue(), day);
+
+                    //여기까지 왔다면 존재하는 날짜
+                    //마지막 주문 날짜 이후 날짜인지 확인
+                    File file = new File("src/date.txt");
+                    BufferedReader reader = new BufferedReader((new FileReader(file)));
+                    String lastDate = reader.readLine();
+                    int result = lastDate.compareTo(date);
+
+                    if(result<= 0){
+                        System.out.println("\n오늘 날짜 : "+date.substring(0,2)+"년 "+date.substring(2,4)+"월 "+date.substring(4,6)+"일");
+                        System.out.println();
+
+                        FileWriter fw = new FileWriter(file,false);
+                        // 문자열 출력
+                        fw.write(lastDate+"\n"+date);
+
+                        fw.close();
+                        reader.close(); //BufferedReader 닫기
+                        break;
+                    }else{
+                        System.out.println("!오류: " + lastDate + " 이후 날짜를 다시 입력해주세요.");
+                    }
+
+                } catch (DateTimeException e) {
+                    System.out.println("!오류: 존재하지 않는 날짜입니다. 다시 입력해주세요.");
+                } catch (IOException e) {
+                    //throw new RuntimeException(e);
+                    System.out.println("파일 존재 X");
+                }
+            } else {
+                System.out.println("!오류: 잘못된 입력입니다. 다시 입력해주세요.");
+            }
+        }
     }
 
     void signUp(){
@@ -202,7 +259,10 @@ public class ProgramMain {
 
                 Map<String, Integer> managerCoupon = new HashMap<>();
                 managerCoupon.put("0", 0);
-                User user = new User(managerName, id, password, managerCoupon);
+                Map<String, List<String>> managerExpiration = new HashMap<>();
+                managerExpiration.put("0", null);
+
+                User user = new User(managerName, id, password, managerCoupon, managerExpiration);
                 System.out.println();
                 ManagerMain managerMain = new ManagerMain(user);
                 break;
@@ -229,6 +289,7 @@ public class ProgramMain {
                     int lineNumber = 2;
 
                     Map<String, Integer> couponMap = new HashMap<>();
+                    Map<String, List<String>> expirationMap = new HashMap<>();
 
                     while ((line = reader.readLine()) != null) {
 
@@ -253,14 +314,32 @@ public class ProgramMain {
                             break;
                         }
 
+                        if (lineNumber == 5) { // expirationMap 가져오기
+                            String[] expirationPairs = line.split(",");
+                            for (String expPairs : expirationPairs) {
+                                String[] expParts = expPairs.split("/");
+                                if (expParts.length == 2) {
+                                    String couponPrice = expParts[0];
+                                    String[] expirationDates = expParts[1].split(",");
+
+                                    List<String> expirationList = new ArrayList<>(Arrays.asList(expirationDates));
+
+                                    expirationMap.put(couponPrice, expirationList);
+                                }
+                            }
+
+                        }
+
                     }
                     // 위에서 입력한 ID에 부합하는 PW가 입력된 경우
                     System.out.println("\n로그인 완료!\n");
 
                     reader.close();
 
+                    checkDate(); //날짜 입력 받기
+
                     // 등록된 일반 유저의 ID와 PW일경우
-                    User user = new User(name, id, password, couponMap);
+                    User user = new User(name, id, password, couponMap, expirationMap);
 //                    System.out.printf(name + " " + id + " " + password + " " + couponMap + " ");
                     UserMain usermain = new UserMain(user);
                     exitOuterLoop = true;

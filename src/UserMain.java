@@ -522,6 +522,25 @@ public class UserMain {
             bufferedWriter.write(stringBuilder.toString());
             bufferedWriter.close();
 
+            //date.txt 파일 refresh
+            String filePathDate = "src/date.txt";
+
+            try (RandomAccessFile file = new RandomAccessFile(filePath, "rw")) {
+                // 첫 번째 줄 읽기
+                String firstLine = file.readLine();
+
+                // 새로운 내용으로 첫 번째 줄 갱신
+                // 파일 시작으로 이동
+                file.seek(0);
+
+                // 새로운 내용으로 첫 번째 줄 갱신
+                file.writeBytes(formattedDate + "\n");
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
         } catch (IOException e) {
             e.printStackTrace();
         }
