@@ -39,10 +39,10 @@ public class ManagerMain {
                             System.out.println("!오류: 잘못된 입력입니다. 다시 입력해주세요.");
                         }else break;
                     }else {
-                        System.out.println("!오류 : 메뉴번호를 잘못 입력했습니다. 다시 입력해주세요.");
+                        System.out.println("!오류: 잘못된 입력입니다. 다시 입력해주세요.");
                     }
                 }catch (NumberFormatException e) {
-                    System.out.println("!오류 : 메뉴번호를 잘못 입력했습니다. 다시 입력해주세요.");
+                    System.out.println("!오류: 잘못된 입력입니다. 다시 입력해주세요.");
                 }
             }
 
@@ -84,7 +84,7 @@ public class ManagerMain {
         }
 
         //productlist.txt파일읽기 완료
-        System.out.println("\n수량변경을원하시면 'y'를, 관리자 메뉴 첫 화면으로 돌아가길 원하시면 'n'을 입력해주세요.");
+        System.out.println("\n수량/가격 변경을원하시면 'y'를, 관리자 메뉴 첫 화면으로 돌아가길 원하시면 'n'을 입력해주세요.");
 
         scanner = new Scanner(System.in);
         String select;
@@ -199,9 +199,9 @@ public class ManagerMain {
         String[] change = targetLine.split("/");
         if(selNum==1) {
             //변경수량 예외처리
+            System.out.println("변경하실 수량을 입력해주세요");
             while (true) {
                 try {
-                    System.out.println("변경하실 수량을 입력해주세요");
                     System.out.print("AShoppingMall > ");
                     String check_amount = scanner.nextLine(); //앞뒤 공백 확인하는
                     String amount_input = check_amount.trim();
@@ -227,9 +227,9 @@ public class ManagerMain {
             }
         }else if(selNum==2){
             //가격 예외처리
+            System.out.println("변경하실 가격을 입력해주세요");
             while (true) {
                 try {
-                    System.out.println("변경하실 가격을 입력해주세요");
                     System.out.print("AShoppingMall > ");
                     String check_price = scanner.nextLine(); //앞뒤 공백 확인하는
                     String price_input = check_price.trim();
@@ -327,10 +327,10 @@ public class ManagerMain {
                         System.out.println("!오류: 잘못된 입력입니다. 다시 입력해주세요.");
                     }else break;
                 }else {
-                    System.out.println("!오류 : 메뉴번호를 잘못 입력했습니다. 다시 입력해주세요.");
+                    System.out.println("!오류: 잘못된 입력입니다. 다시 입력해주세요.");
                 }
             }catch (NumberFormatException e) {
-                System.out.println("!오류 : 메뉴번호를 잘못 입력했습니다. 다시 입력해주세요.");
+                System.out.println("!오류: 잘못된 입력입니다. 다시 입력해주세요.");
             }
         }
 
@@ -470,7 +470,7 @@ public class ManagerMain {
                             pNum=Integer.parseInt(num_input);
 
                             if(maxNumber<pNum){
-                                System.out.println("번호를 다시 입력해주세요.");
+                                System.out.println("!오류 : 잘못된 입력입니다. 다시 입력해주세요.");
                                 continue;
                             }
                             for (int i = 1; i < lines.size(); i++) {
@@ -485,13 +485,13 @@ public class ManagerMain {
                                 break;
                             }
                             else{ //pNum에 해당하는 행을 찾지 못한 경우에 대한 처리
-                                System.out.println("번호를 다시 입력해주세요.");
+                                System.out.println("!오류 : 잘못된 입력입니다. 다시 입력해주세요.");
                             }
                         }else if(num_input.startsWith("0")){ //0선행
-                            System.out.println("번호를 다시 입력해주세요.");
+                            System.out.println("!오류 : 잘못된 입력입니다. 다시 입력해주세요.");
                         }
                     }else{ //공백이 포함된 문법오류
-                        System.out.println("번호를 다시 입력해주세요.");
+                        System.out.println("!오류 : 잘못된 입력입니다. 다시 입력해주세요.");
                     }
 
 
@@ -499,7 +499,6 @@ public class ManagerMain {
                     System.out.println("예외 발생 : "+e.getMessage()+"\n");
                 }
             }
-            System.out.printf("checkIndex: %d\n",checkIndex);
 
             //productlist.txt에 변경된 상품 정보를 반영하고 pName에 상품명 대입
             pName= lines.get(checkIndex).split("/")[1];
@@ -508,7 +507,7 @@ public class ManagerMain {
             lines.remove(checkIndex);
 
             System.out.println();
-            System.out.printf("%d. %s 상품이 삭제되었습니다. ",pNum,pName);
+            System.out.printf("%d. %s 상품이 삭제되었습니다!",pNum,pName);
             System.out.println();
 
         }
