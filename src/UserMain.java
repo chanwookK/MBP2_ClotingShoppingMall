@@ -293,7 +293,7 @@ public class UserMain {
             // 문법 규칙 검사
             //Pattern pattern = Pattern.compile("^[가-힣]{1,30}$");
             //Pattern pattern = Pattern.compile("^[\\p{L}0-9]{1,30}$");
-            Pattern pattern = Pattern.compile("^[\\p{L}\\s]{1,30}$");
+            Pattern pattern = Pattern.compile("^[\\p{L}\\s]{1,30}$", Pattern.CASE_INSENSITIVE);
             userWantName = userWantName.replaceAll("\\s", "");
 
             Matcher matcher = pattern.matcher(userWantName);
