@@ -1,4 +1,6 @@
 import java.io.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -12,7 +14,193 @@ public class UserMain {
     public UserMain(User user) throws IOException {
 
         this.user = user;
+        checkCoupon();
+        checkPurchase();
         userMainLoop();
+
+    }
+
+    public void checkCoupon() {
+        String todayDate = this.user.getTodayDate();
+        //231130 이런식
+        int deletedNum = 0;
+        int integerDate = Integer.parseInt(todayDate);
+        List<String> coupon = this.user.getExpirationMap().get("5000");
+        Queue<String> couponQueue = new LinkedList<>(coupon);
+        int size = couponQueue.size();
+
+        for(int i=0; i<size; i++) {
+            String checkCoupon = couponQueue.peek();
+            int integerCheckCoupon = Integer.parseInt(checkCoupon);
+
+            if(integerDate > integerCheckCoupon) {
+                couponQueue.poll();
+                deletedNum++;
+            }
+        }
+
+
+        List<String> finiishedCoupon = new ArrayList<>(couponQueue);
+
+
+        //userId couponList,coupon 개수 수정
+        String filePath = "src/User/"+this.user.getId()+".txt";
+
+        try {
+            // 파일 읽기
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(filePath));
+            StringBuilder stringBuilder = new StringBuilder();
+            String line;
+            int lineNumber = 0;
+
+            while ((line = bufferedReader.readLine()) != null) {
+                lineNumber++;
+
+                if (lineNumber == 4) {
+                    String[] parts2 = line.split("/");
+                    int num = Integer.parseInt(parts2[1]);
+                    num = num - deletedNum;
+                    parts2[1] = String.valueOf(num);
+                    // 수정된 라인을 StringBuilder에 추가
+                    stringBuilder.append(String.join("/", parts2)).append("\n");
+                } else if(lineNumber ==5) {
+                    String[] parts2 = line.split("/");
+                    String strlist = "";
+                    for(String s : finiishedCoupon) {
+                        strlist += s+",";
+                    }
+                    String strResult = "";
+                    if(finiishedCoupon.size() ==0) {
+                        strResult += "0";
+                    } else {
+                        strResult = strlist.substring(0, strlist.length() - 1);
+                    }
+                    parts2[1] = strResult;
+                    // 수정된 라인을 StringBuilder에 추가
+                    stringBuilder.append(String.join("/", parts2)).append("\n");
+                }
+                else {
+                    // 수정할 라인이 아니면 그대로 추가
+                    stringBuilder.append(line).append("\n");
+                }
+            }
+
+            bufferedReader.close();
+
+            // 파일 쓰기
+            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(filePath));
+            bufferedWriter.write(stringBuilder.toString());
+            bufferedWriter.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void checkPurchase() {
+        String todayDate = this.user.getTodayDate();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyMMdd");
+        Date date;
+        String orderDuedate = "";
+        try {
+            date = sdf.parse(todayDate);
+
+            // Calendar 객체를 이용하여 한 달을 뺍니다.
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            calendar.add(Calendar.MONTH, -1);
+
+            // Calendar 객체를 다시 Date 객체로 변환합니다.
+            Date oneMonthAgoDate = calendar.getTime();
+
+            // 변환된 Date 객체를 다시 yymmdd 형식의 문자열로 포맷합니다.
+            String formattedDate = sdf.format(oneMonthAgoDate);
+            orderDuedate = formattedDate;
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        //231130 이런식
+        int coupNum = 0;
+        int integerDate = Integer.parseInt(orderDuedate);
+        int totalCost =0;
+        int couponCost =0;
+
+
+        //userId couponList,coupon 개수 수정
+        String filePath = "src/User/"+this.user.getId()+".txt";
+
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(filePath));
+            String line;
+            int lineNumber = 0;
+
+            while ((line = bufferedReader.readLine()) != null) {
+                lineNumber++;
+
+                if (lineNumber == 4) {
+                    String[] parts2 = line.split("/");
+                    int num = Integer.parseInt(parts2[1]);
+                    coupNum = num;
+                } else if(lineNumber >=6) {
+                    String[] parts2 = line.split("/");
+                    int price = Integer.parseInt(parts2[2]);
+                    int productDate = Integer.parseInt(parts2[3]);
+                    if (productDate > integerDate) {
+                        totalCost += price;
+                    }
+                }
+            }
+            bufferedReader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if(coupNum * 100000 < totalCost) {
+            couponCost = totalCost - (coupNum * 100000);
+        } else {
+            couponCost = 0;
+        }
+
+        try {
+            // 파일 읽기
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(filePath));
+            StringBuilder stringBuilder = new StringBuilder();
+            String line;
+            int lineNumber = 0;
+
+            while ((line = bufferedReader.readLine()) != null) {
+                lineNumber++;
+
+                if (lineNumber == 3) {
+                    String[] parts2 = line.split("/");
+                    parts2[0] = String.valueOf(totalCost);
+                    parts2[1] = String.valueOf(couponCost);
+                    // 수정된 라인을 StringBuilder에 추가
+                    stringBuilder.append(String.join("/", parts2)).append("\n");
+                } else if(lineNumber >=6){
+                    String[] parts = line.split("/");
+                    int productDate = Integer.parseInt(parts[3]);
+                    if (productDate > integerDate) {
+                        stringBuilder.append(line).append("\n");
+                    }
+                }
+                else {
+                    // 수정할 라인이 아니면 그대로 추가
+                    stringBuilder.append(line).append("\n");
+                }
+            }
+
+            bufferedReader.close();
+
+            // 파일 쓰기
+            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(filePath));
+            bufferedWriter.write(stringBuilder.toString());
+            bufferedWriter.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -91,14 +279,15 @@ public class UserMain {
             System.out.println();
 
             // 문법 규칙 검사
-            Pattern pattern = Pattern.compile("^[가-힣]{1,30}$");
+            //Pattern pattern = Pattern.compile("^[가-힣]{1,30}$");
+            Pattern pattern = Pattern.compile("^[\\p{L}0-9]{1,30}$");
             Matcher matcher = pattern.matcher(userWantName);
 
             if (matcher.matches()) {
                 // 의미 규칙 검사
                 String filePath = "src/productlist.txt";
-
                 try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+                    reader.readLine();
                     String line;
                     while ((line = reader.readLine()) != null) {
                         parts = line.split("/");
@@ -583,7 +772,7 @@ public class UserMain {
                     String line;
                     boolean found = false;
 
-                    for(int i=0; i<4; i++) {
+                    for(int i=0; i<5; i++) {
                         reader.readLine();
                     }
                     System.out.println();
