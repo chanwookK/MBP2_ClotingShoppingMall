@@ -262,7 +262,7 @@ public class ProgramMain {
                 Map<String, List<String>> managerExpiration = new HashMap<>();
                 managerExpiration.put("0", null);
 
-                User user = new User(managerName, id, password, managerCoupon, managerExpiration);
+                User user = new User(managerName, id, password, 1,managerCoupon, managerExpiration);
                 System.out.println();
                 ManagerMain managerMain = new ManagerMain(user);
                 break;
@@ -339,7 +339,7 @@ public class ProgramMain {
                     checkDate(); //날짜 입력 받기
 
                     // 등록된 일반 유저의 ID와 PW일경우
-                    User user = new User(name, id, password, couponMap, expirationMap);
+                    User user = new User(name, id, password,0, couponMap, expirationMap);
 //                    System.out.printf(name + " " + id + " " + password + " " + couponMap + " ");
                     UserMain usermain = new UserMain(user);
                     exitOuterLoop = true;

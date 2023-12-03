@@ -16,13 +16,18 @@ public class User {
     private Map<String, List<String>> expirationMap;
     private String todayDate;
 
-    public User(String name, String id, String password, Map<String, Integer> coupon, Map<String, List<String>> expirationMap){
+    public User(String name, String id, String password, int flag,Map<String, Integer> coupon, Map<String, List<String>> expirationMap){
 
         this.name = name;
         this.id = id;
         this.password = password;
         this.coupon = coupon;
         this.expirationMap = expirationMap;
+
+        if(flag==1){//관리자인 경우
+            return;
+        }
+
 
         String filePath = "src/date.txt";
 

@@ -6,6 +6,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.text.DecimalFormat;
+
 
 public class UserMain {
 
@@ -95,6 +97,17 @@ public class UserMain {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        Map<String, Integer> userCoupon = this.user.getCoupon();
+        int couponNum = this.user.getCoupon().get("5000");
+        userCoupon.put("5000", couponNum-deletedNum);
+        this.user.setCoupon(userCoupon);
+
+        Map<String, List<String>> expirationCoupon = this.user.getExpirationMap();
+        expirationCoupon.put("5000", finiishedCoupon);
+        this.user.setExpirationMap(expirationCoupon);
+
+
     }
 
     public void checkPurchase() {
@@ -272,11 +285,10 @@ public class UserMain {
                 // 사용자로부터 상품명 입력 받기
                 System.out.println();
                 System.out.println("[상품 검색]");
-                System.out.println("검색할 상품명을 입력해주세요:");
+                System.out.println("검색할 상품명을 입력해주세요");
             }
             System.out.print("AShoppingMall > ");
             userWantName = in.nextLine();
-            System.out.println();
 
             // 문법 규칙 검사
             //Pattern pattern = Pattern.compile("^[가-힣]{1,30}$");
@@ -300,17 +312,20 @@ public class UserMain {
                     e.printStackTrace();
                 }
 
+                int index=1;
                 for (ArrayList<String> product : productsList) {
-                    int i=1;
                     String productName = product.get(0); // 상품명
                     String productPrice = product.get(1); // 상품가격
 
                     // 사용자가 원하는 상품명과 일치하는 경우 출력
                     if (productName.contains(userWantName)) {
+                        if(index==1) System.out.println();
                         empty = false;
-                        System.out.println( i + ". " + productName + "\n  " + "가격: " +productPrice);
-                        System.out.println();
-                        i++;
+                        //35000 -> 35,000
+                        DecimalFormat decimalFormat= new DecimalFormat("#,###");
+                        String formattedNumber=decimalFormat.format(Integer.parseInt(productPrice));
+                        System.out.println( index + ". " + productName + "\n   " + "가격: " +formattedNumber);
+                        index++;
                     }
                 }
                 if(empty) {
@@ -321,7 +336,7 @@ public class UserMain {
                     continue;
                 }
 
-                System.out.println("메인 메뉴로 돌아가려면 엔터 키를 누르세요.");
+                System.out.println("\n메인 메뉴로 돌아가려면 엔터 키를 누르세요.");
                 System.out.print("AShoppingMall > ");
                 in.nextLine(); // 엔터 대기
                 System.out.println();
@@ -335,8 +350,6 @@ public class UserMain {
                 continue; // 재귀 호출을 통해 다시 상품명 검색
             }
         }
-
-
     }
     public void productOrder() throws IOException {
 
@@ -559,6 +572,21 @@ public class UserMain {
 
             //유저객체의 쿠폰 감소
             user.getCoupon().put(couponType, user.getCoupon().get(couponType) - couponN);
+            //유저객체 expirationMap 갱신
+            Map<String, List<String>> newMap = new HashMap<>();
+            List<String> newList = new ArrayList<>();
+            newMap = this.user.getExpirationMap();
+            newList = this.user.getExpirationMap().get("5000");
+            Queue<String> couponQueue = new LinkedList<>(newList);
+            for(int z=0; z<couponN; z++) {
+                couponQueue.poll();
+            }
+            List<String> finiishedCoupon = new ArrayList<>(couponQueue);
+            newMap.put("5000",finiishedCoupon);
+            this.user.setExpirationMap(newMap);
+
+
+
 
             System.out.println();
             System.out.println("지불할 금액은 " + price + "원 입니다.");
@@ -580,11 +608,20 @@ public class UserMain {
                 addCoupon = 0;
             }
 
+            //쿠폰추가 로직
             Map<String, Integer> couponMap = new HashMap<>();
             couponMap = user.getCoupon();
             int originalCount = user.getCoupon().get("5000");
             originalCount += addCoupon;
             couponMap.put("5000",originalCount);
+            //쿠폰기록 추가
+            for(int q=0; q<addCoupon; q++) {
+                Map<String, List<String>> CouMap = this.user.getExpirationMap();
+                List<String> newCouList = CouMap.get("5000");
+                newCouList.add(this.user.getTodayDate());
+                CouMap.put("5000", newCouList);
+                this.user.setExpirationMap(CouMap);
+            }
 
             System.out.println(user.getName() + "회원님의 현재 쿠폰 보유량입니다.");
             for (String couponNum : user.getCoupon().keySet()) {
@@ -673,7 +710,7 @@ public class UserMain {
 
                 } else if (lineNumber == 4) {
                     String[] parts2 = line.split("/");
-                    int couponValue = user.getCoupon().get("5000");
+                    int couponValue = this.user.getCoupon().get("5000");
 
                     if(parts2.length >=1) {
                         int newValue = couponValue;
@@ -683,7 +720,25 @@ public class UserMain {
                     // 수정된 라인을 StringBuilder에 추가
                     stringBuilder.append(String.join("/", parts2)).append("\n");
 
-                } else {
+                }  else if(lineNumber ==5) {
+                    List<String> cList = this.user.getExpirationMap().get("5000");
+                    String[] parts2 = line.split("/");
+                    String strlist = "";
+                    for(String s : cList) {
+                        strlist += s+",";
+                    }
+                    String strResult = "";
+                    if(cList.size() ==0) {
+                        strResult += "0";
+                    } else {
+                        strResult = strlist.substring(0, strlist.length() - 1);
+                    }
+                    parts2[1] = strResult;
+                    // 수정된 라인을 StringBuilder에 추가
+                    stringBuilder.append(String.join("/", parts2)).append("\n");
+                }
+
+                else {
                     // 수정할 라인이 아니면 그대로 추가
                     stringBuilder.append(line).append("\n");
                 }
@@ -691,11 +746,11 @@ public class UserMain {
 
             }
             // 현재 날짜 가져오기
-            LocalDate currentDate = LocalDate.now();
-
+            //LocalDate currentDate = LocalDate.now();
             // 출력을 원하는 형식으로 포맷 지정 ("yyMMdd" 형식)
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyMMdd");
-            String formattedDate = currentDate.format(formatter);
+            String formattedDate = this.user.getTodayDate();
+//            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyMMdd");
+//            String formattedDate = currentDate.format(formatter);
 
             // 결과 출력
 //            System.out.println("현재 날짜: " + formattedDate);
@@ -714,7 +769,7 @@ public class UserMain {
             //date.txt 파일 refresh
             String filePathDate = "src/date.txt";
 
-            try (RandomAccessFile file = new RandomAccessFile(filePath, "rw")) {
+            try (RandomAccessFile file = new RandomAccessFile(filePathDate, "rw")) {
                 // 첫 번째 줄 읽기
                 String firstLine = file.readLine();
 
