@@ -263,7 +263,7 @@ public class ProgramMain {
                 Map<String, List<String>> managerExpiration = new HashMap<>();
                 managerExpiration.put("0", null);
 
-                User user = new User(managerName, id, password, 1,managerCoupon, managerExpiration);
+                User user = new User(managerName, id, password,managerCoupon, managerExpiration);
                 System.out.println();
                 ManagerMain managerMain = new ManagerMain(user);
                 break;
@@ -291,6 +291,7 @@ public class ProgramMain {
 
                     Map<String, Integer> couponMap = new HashMap<>();
                     Map<String, List<String>> expirationMap = new HashMap<>();
+                    List<String> expirationList = new ArrayList<>();
 
                     while ((line = reader.readLine()) != null) {
 
@@ -312,23 +313,22 @@ public class ProgramMain {
                             for (Map.Entry<String, Integer> entry : couponMap.entrySet()) {
                                 coupon += entry.getValue();
                             }
-                            break;
                         }
 
                         if (lineNumber == 5) { // expirationMap 가져오기
-                            String[] expirationPairs = line.split(",");
-                            for (String expPairs : expirationPairs) {
-                                String[] expParts = expPairs.split("/");
-                                if (expParts.length == 2) {
-                                    String couponPrice = expParts[0];
-                                    String[] expirationDates = expParts[1].split(",");
-
-                                    List<String> expirationList = new ArrayList<>(Arrays.asList(expirationDates));
+                            String[] parts2=line.split("/");
+                            String couponPrice=parts2[0];
+                            if(parts2[1].equals("0")){
+                                //빈 리스트 상태로 넣기
+                                expirationMap.put(couponPrice, expirationList);
+                            }else{
+                                String[] expirationPairs = parts2[1].split(",");
+                                for (String expPairs : expirationPairs) {
+                                    expirationList.add(expPairs);
 
                                     expirationMap.put(couponPrice, expirationList);
                                 }
                             }
-
                         }
 
                     }
@@ -340,7 +340,7 @@ public class ProgramMain {
                     checkDate(); //날짜 입력 받기
 
                     // 등록된 일반 유저의 ID와 PW일경우
-                    User user = new User(name, id, password,0, couponMap, expirationMap);
+                    User user = new User(name, id, password, couponMap, expirationMap);
 //                    System.out.printf(name + " " + id + " " + password + " " + couponMap + " ");
                     UserMain usermain = new UserMain(user);
                     exitOuterLoop = true;

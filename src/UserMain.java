@@ -7,6 +7,8 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.text.DecimalFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 
 public class UserMain {
@@ -62,6 +64,7 @@ public class UserMain {
                     String[] parts2 = line.split("/");
                     int num = Integer.parseInt(parts2[1]);
                     num = num - deletedNum;
+                    System.out.println("line: "+line+", num: "+num);
                     parts2[1] = String.valueOf(num);
                     // 수정된 라인을 StringBuilder에 추가
                     stringBuilder.append(String.join("/", parts2)).append("\n");
@@ -732,7 +735,7 @@ public class UserMain {
                     }
                     String strResult = "";
                     if(cList.size() ==0) {
-                        strResult += "0";
+                        strResult += this.user.getTodayDate();
                     } else {
                         strResult = strlist.substring(0, strlist.length() - 1);
                     }
