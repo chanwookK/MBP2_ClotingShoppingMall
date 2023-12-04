@@ -186,7 +186,8 @@ public class ProgramMain {
             writer.write(name+"\n");
             writer.write(password+"\n");
             writer.write("0/0\n");
-            writer.write("5000/0");
+            writer.write("5000/0\n");
+            writer.write("5000/0\n");
             writer.close();
         }catch (IOException e){
             e.printStackTrace();
