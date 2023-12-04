@@ -845,9 +845,12 @@ public class UserMain {
                         found = true;
                         parts = line.split("/");
 
+                        DecimalFormat decimalFormat= new DecimalFormat("#,###");
+                        String formattedNumber=decimalFormat.format(Integer.parseInt(parts[2]));
+
                         System.out.println(k + ". " + parts[1] + "\n" +
                                 "구매날짜: " + parts[3].substring(0,2)+"." + parts[3].substring(2,4)+"." + parts[3].substring(4)+ "\n" +
-                                "가격: "+ parts[2]);
+                                "가격: "+ formattedNumber);
                         k++;
                     }
 
