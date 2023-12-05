@@ -197,9 +197,10 @@ public class UserMain {
                 } else if(lineNumber >=6){
                     String[] parts = line.split("/");
                     int productDate = Integer.parseInt(parts[3]);
-                    if (productDate > integerDate) {
-                        stringBuilder.append(line).append("\n");
-                    }
+                    stringBuilder.append(line).append("\n");
+//                    if (productDate > integerDate) {
+//                        stringBuilder.append(line).append("\n");
+//                    }
                 }
                 else {
                     // 수정할 라인이 아니면 그대로 추가
@@ -638,7 +639,7 @@ public class UserMain {
             LocalDate newDate = today.plusMonths(1);
             String newDateStr = newDate.format(DateTimeFormatter.ofPattern("yyMMdd"));
 
-            System.out.println(addCoupon);
+            //System.out.println(addCoupon);
             for(int q=0; q<addCoupon; q++) {
                 Map<String, List<String>> CouMap = this.user.getExpirationMap();
                 List<String> newCouList = CouMap.get("5000");
@@ -646,7 +647,7 @@ public class UserMain {
                 CouMap.put("5000", newCouList);
                 this.user.setExpirationMap(CouMap);
             }
-            System.out.println(this.user.getExpirationMap());
+            //System.out.println(this.user.getExpirationMap());
 
             System.out.println(user.getName() + "회원님의 현재 쿠폰 보유량입니다.");
             for (String couponNum : user.getCoupon().keySet()) {
