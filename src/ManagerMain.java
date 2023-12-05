@@ -200,6 +200,7 @@ public class ManagerMain {
         if(selNum==1) {
             //변경수량 예외처리
             System.out.println("변경하실 수량을 입력해주세요");
+            System.out.println(change.length);
             while (true) {
                 try {
                     System.out.print("AShoppingMall > ");
@@ -358,7 +359,7 @@ public class ManagerMain {
                     System.out.println("!오류 : 상품명 입력 형식이 맞지 않습니다. 다시 입력해주세요.");
                 }else if(input.length()<2 || input.length()>30){ //상품명 길이가 2이상 30이하가 안되는 경우
                     System.out.println("!오류 : 상품명 입력 형식이 맞지 않습니다. 다시 입력해주세요.");
-                }else if(input.matches("^[a-zA-Z가-힣]+$")) {
+                }else if(input.matches("^[a-zA-Z가-힣]+[0-9]*$")) {
                     //문자열로만 구성되어있어고 공백도 없는
 
                     //다른 상품명과 중복되는지 확인
