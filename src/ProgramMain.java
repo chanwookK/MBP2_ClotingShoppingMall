@@ -153,8 +153,8 @@ public class ProgramMain {
                 }
             }
 
-            if(!(Pattern.matches("^[0-9a-zA-z]*$",id))||id.length()<6||id.length()>10){ //문법규칙 확인
-                System.out.println("!오류 : 아이디는 영문 대/소문자와 숫자로만 이루어진 길이가 6 이상 10 이하인 문자열이어야합니다.\n" +
+            if(!(Pattern.matches("^[0-9a-z]*$",id))||id.length()<6||id.length()>10){ //문법규칙 확인
+                System.out.println("!오류 : 아이디는 영문 소문자와 숫자로만 이루어진 길이가 6 이상 10 이하인 문자열이어야합니다.\n" +
                         "다시 입력해주세요.");
             }else if(!c) {
                 System.out.println("!오류 : 이미 존재하는 아이디입니다. 다시 입력해주세요.");
@@ -230,7 +230,7 @@ public class ProgramMain {
             }
 
             // ID 입력 조건
-            if (id.contains(" ") || id.length() < 6 || 10 < id.length() || !id.matches("^[a-zA-Z0-9]*$")) {
+            if (id.contains(" ") || id.length() < 6 || 10 < id.length() || !id.matches("^[a-z0-9]*$")) {
                 System.out.println("!오류 : 등록되지 않은 아이디입니다. 다시 입력해주세요.");
             }
             else {
