@@ -64,7 +64,7 @@ public class UserMain {
                     String[] parts2 = line.split("/");
                     int num = Integer.parseInt(parts2[1]);
                     num = num - deletedNum;
-                    System.out.println("line: "+line+", num: "+num);
+                    //System.out.println("line: "+line+", num: "+num);
                     parts2[1] = String.valueOf(num);
                     // 수정된 라인을 StringBuilder에 추가
                     stringBuilder.append(String.join("/", parts2)).append("\n");
@@ -488,11 +488,24 @@ public class UserMain {
             else{
                 addCoupon = 0;
             }
+            //쿠폰추가 로직
             Map<String, Integer> couponMap = new HashMap<>();
             couponMap = user.getCoupon();
             int originalCount = user.getCoupon().get("5000");
             originalCount += addCoupon;
             couponMap.put("5000",originalCount);
+            //쿠폰기록 추가
+            LocalDate today = LocalDate.parse(this.user.getTodayDate(), DateTimeFormatter.ofPattern("yyMMdd"));
+            LocalDate newDate = today.plusMonths(1);
+            String newDateStr = newDate.format(DateTimeFormatter.ofPattern("yyMMdd"));
+            for(int q=0; q<addCoupon; q++) {
+                Map<String, List<String>> CouMap = this.user.getExpirationMap();
+                List<String> newCouList = CouMap.get("5000");
+                newCouList.add(newDateStr);
+                CouMap.put("5000", newCouList);
+                this.user.setExpirationMap(CouMap);
+            }
+
         }
         else {
             useCoupon = true;
@@ -621,13 +634,19 @@ public class UserMain {
             originalCount += addCoupon;
             couponMap.put("5000",originalCount);
             //쿠폰기록 추가
+            LocalDate today = LocalDate.parse(this.user.getTodayDate(), DateTimeFormatter.ofPattern("yyMMdd"));
+            LocalDate newDate = today.plusMonths(1);
+            String newDateStr = newDate.format(DateTimeFormatter.ofPattern("yyMMdd"));
+
+            System.out.println(addCoupon);
             for(int q=0; q<addCoupon; q++) {
                 Map<String, List<String>> CouMap = this.user.getExpirationMap();
                 List<String> newCouList = CouMap.get("5000");
-                newCouList.add(this.user.getTodayDate());
+                newCouList.add(newDateStr);
                 CouMap.put("5000", newCouList);
                 this.user.setExpirationMap(CouMap);
             }
+            System.out.println(this.user.getExpirationMap());
 
             System.out.println(user.getName() + "회원님의 현재 쿠폰 보유량입니다.");
             for (String couponNum : user.getCoupon().keySet()) {
@@ -735,7 +754,8 @@ public class UserMain {
                     }
                     String strResult = "";
                     if(cList.size() ==0) {
-                        strResult += this.user.getTodayDate();
+                       //strResult += this.user.getTodayDate();
+                        strResult += "0";
                     } else {
                         strResult = strlist.substring(0, strlist.length() - 1);
                     }
